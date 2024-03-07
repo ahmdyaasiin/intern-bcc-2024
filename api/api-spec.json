@@ -3,7 +3,7 @@
   "info": {
     "title": "Bekas.an - Open API",
     "description": "Description of the API",
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "servers": [
     {
@@ -1251,6 +1251,756 @@
           }
         }
       }
-    }
+    },
+
+    "/product": {
+      "get": {
+        "description": "",
+        "tags": [
+          "Get Product"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil mendapatkan produk",
+                  "data": {
+                    "products": [
+                      {
+                        "owner": {
+                          "id": "355a52b2-dcb7-11ee-aa78-325096b39f47",
+                          "name": "Ira Melani"
+                        },
+                        "product": {
+                          "id": "658c03ea-dcb7-11ee-ab7b-325096b39f47",
+                          "name": "Ini barang satu",
+                          "price": 50000,
+                          "url_product": "example.jpg"
+                        }
+                      },
+                      {
+                        "owner": {
+                          "id": "3b2dab26-dcb7-11ee-906e-325096b39f47",
+                          "name": "Pranata Tampubolon"
+                        },
+                        "product": {
+                          "id": "8195a708-dcb7-11ee-b876-325096b39f47",
+                          "name": "Ini barang dua",
+                          "price": 15000,
+                          "url_product": "example.jpg"
+                        }
+                      },
+                      {
+                        "owner": {
+                          "id": "a2302902-dcb7-11ee-ba49-325096b39f47",
+                          "name": "Queen Puspita"
+                        },
+                        "product": {
+                          "id": "a5ef73fe-dcb7-11ee-8581-325096b39f47",
+                          "name": "Ini barang tiga",
+                          "price": 7900,
+                          "url_product": "example.jpg"
+                        }
+                      }
+                    ],
+                    "categories": [
+                      {
+                        "id": "cb04dbda-dcb6-11ee-830c-325096b39f47",
+                        "name": "baju",
+                        "url_category": "example.jpg",
+                        "total_product": 6
+                      },
+                      {
+                        "id": "cee80a92-dcb6-11ee-9067-325096b39f47",
+                        "name": "buku",
+                        "url_category": "example.jpg",
+                        "total_product": 3
+                      },
+                      {
+                        "id": "f2212af2-dcb6-11ee-9e72-325096b39f47",
+                        "name": "alat musik",
+                        "url_category": "example.jpg",
+                        "total_product": 3
+                      }
+                    ]
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "products": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "owner": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "product": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "price": {
+                                    "type": "integer"
+                                  },
+                                  "url_product": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "categories": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "url_category": {
+                                "type": "string"
+                              },
+                              "total_product": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Produk tidak ditemukan"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kesalahan validasi",
+                  "errors": {
+                    "page": "Page harus bernilai positif"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "page": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/product/search": {
+      "get": {
+        "description": "",
+        "tags": [
+          "Get Product"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "query",
+            "in": "path"
+          },
+          {
+            "name": "filter_by",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "enum": ["", "distance", "category", "price"],
+              "default": ""
+            }
+          },
+          {
+            "name": "category",
+            "in": "path"
+          },
+          {
+            "name": "sort",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "enum": ["ASC", "DESC"],
+              "default": "ASC"
+            }
+          },
+          {
+            "name": "page",
+            "in": "path",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil mendapatkan produk",
+                  "data": {
+                    "products": [
+                      {
+                        "owner": {
+                          "id": "355a52b2-dcb7-11ee-aa78-325096b39f47",
+                          "name": "Ira Melani",
+                          "distance": 0.29
+                        },
+                        "product": {
+                          "id": "658c03ea-dcb7-11ee-ab7b-325096b39f47",
+                          "name": "Ini barang satu",
+                          "price": 50000,
+                          "url_product": "example.jpg"
+                        },
+                        "negotiate": {
+                          "is_negotiate": false,
+                          "status": 0,
+                          "negotiate_price": 0
+                        }
+                      },
+                      {
+                        "owner": {
+                          "id": "3b2dab26-dcb7-11ee-906e-325096b39f47",
+                          "name": "Pranata Tampubolon",
+                          "distance": 0.31
+                        },
+                        "product": {
+                          "id": "8195a708-dcb7-11ee-b876-325096b39f47",
+                          "name": "Ini barang dua",
+                          "price": 15000,
+                          "url_product": "example.jpg"
+                        },
+                        "negotiate": {
+                          "is_negotiate": true,
+                          "status": 1,
+                          "negotiate_price": 12000
+                        }
+                      },
+                      {
+                        "owner": {
+                          "id": "a2302902-dcb7-11ee-ba49-325096b39f47",
+                          "name": "Queen Puspita",
+                          "distance": 1.2
+                        },
+                        "product": {
+                          "id": "a5ef73fe-dcb7-11ee-8581-325096b39f47",
+                          "name": "Ini barang tiga",
+                          "price": 7900,
+                          "url_product": "example.jpg"
+                        },
+                        "negotiate": {
+                          "is_negotiate": true,
+                          "status": 0,
+                          "negotiate_price": 5000
+                        }
+                      }
+                    ],
+                    "categories": [
+                      {
+                        "id": "cb04dbda-dcb6-11ee-830c-325096b39f47",
+                        "name": "baju",
+                        "url_category": "example.jpg",
+                        "total_product": 6
+                      },
+                      {
+                        "id": "cee80a92-dcb6-11ee-9067-325096b39f47",
+                        "name": "buku",
+                        "url_category": "example.jpg",
+                        "total_product": 3
+                      },
+                      {
+                        "id": "f2212af2-dcb6-11ee-9e72-325096b39f47",
+                        "name": "alat musik",
+                        "url_category": "example.jpg",
+                        "total_product": 3
+                      }
+                    ]
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "products": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "owner": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "distance": {
+                                    "type": "number"
+                                  }
+                                }
+                              },
+                              "product": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "price": {
+                                    "type": "integer"
+                                  },
+                                  "url_product": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "negotiate": {
+                                "type": "object",
+                                "properties": {
+                                  "is_negotiate": {
+                                    "type": "boolean"
+                                  },
+                                  "status": {
+                                    "type": "integer"
+                                  },
+                                  "negotiate_price": {
+                                    "type": "integer"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        "categories": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "url_category": {
+                                "type": "string"
+                              },
+                              "total_product": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Produk tidak ditemukan"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kesalahan validasi",
+                  "errors": {
+                    "filter_by": "Jenis filter tidak ditemukan",
+                    "category": "Kategori tidak boleh kosong",
+                    "sort": "Sort hanya bisa ASC atau DESC",
+                    "page": "Page harus bernilai positif"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "filter_by": {
+                          "type": "string"
+                        },
+                        "category": {
+                          "type": "string"
+                        },
+                        "sort": {
+                          "type": "string"
+                        },
+                        "page": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/product/{id}": {
+      "get": {
+        "description": "",
+        "tags": [
+          "Get Product"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil mendapatkan produk",
+                  "data": {
+                    "owner": {
+                      "id": "355a52b2-dcb7-11ee-aa78-325096b39f47",
+                      "name": "Ira Melani",
+                      "distance": 0.29
+                    },
+                    "product": {
+                      "id": "658c03ea-dcb7-11ee-ab7b-325096b39f47",
+                      "name": "Ini barang satu",
+                      "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris velit nulla, laoreet et sem nec, consequat congue ipsum. Nulla sollicitudin consequat magna nec commodo. Maecenas pretium feugiat diam at volutpat. Vivamus in erat lorem. Ut nisi nisl, consectetur vitae ullamcorper eget, pulvinar ut turpis. Suspendisse blandit convallis rutrum. Curabitur vestibulum ligula in pulvinar vulputate. Mauris eget malesuada augue. Integer nec felis in enim mattis pretium in eget massa.",
+                      "price": 50000,
+                      "id_category": "cb04dbda-dcb6-11ee-830c-325096b39f47",
+                      "category": "baju",
+                      "url_product": [
+                        "example1.jpg",
+                        "example2.jpg",
+                        "example3.jpg"
+                      ]
+                    },
+                    "negotiate": {
+                      "is_negotiate": true,
+                      "status": 1,
+                      "negotiate_price": 12000
+                    }
+                  }
+                },
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string"
+                      },
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "owner": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "distance": {
+                                "type": "number"
+                              }
+                            }
+                          },
+                          "product": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "description": {
+                                "type": "string"
+                              },
+                              "price": {
+                                "type": "integer"
+                              },
+                              "id_category": {
+                                "type": "string"
+                              },
+                              "category": {
+                                "type": "string"
+                              },
+                              "url_product": {
+                                "type": "array"
+                              }
+                            }
+                          },
+                          "negotiate": {
+                            "type": "object",
+                            "properties": {
+                              "is_negotiate": {
+                                "type": "boolean"
+                              },
+                              "status": {
+                                "type": "integer"
+                              },
+                              "negotiate_price": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Produk tidak ditemukan"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
   }
 }
