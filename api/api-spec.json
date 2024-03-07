@@ -1,0 +1,1256 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Bekas.an - Open API",
+    "description": "Description of the API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/api/v1"
+    }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "description": "",
+        "tags": [
+          "User Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "name": "John Doe",
+                "email": "johndoe@example.com",
+                "password": "password_john_doe",
+                "confirm_password": "password_john_doe",
+                "address": "Jl. Veteran, Ketawanggede, Kec. Lowokwaru, Kota Malang, Jawa Timur 65145",
+                "latitude": -7.95217615839509,
+                "longitude": 112.61271625437
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 18
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "maxLength": 64
+                  },
+                  "confirm_password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "maxLength": 64
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "name", "email", "password", "confirm_password", "address", "latitude", "longitude"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "User berhasil didaftarkan",
+                  "data": {
+                    "id": "29e01718-dc8b-11ee-8924-325096b39f47"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Email telah terdaftar"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kesalahan validasi",
+                  "errors": {
+                    "name": "Name tidak boleh kosong",
+                    "email": "Email tidak boleh kosong",
+                    "password": "Password tidak boleh kosong",
+                    "confirm_password": "Confirm password tidak boleh kosong",
+                    "address": "address tidak boleh kosong",
+                    "latitude": "Latitude tidak boleh kosong",
+                    "longitude": "Longitude tidak boleh kosong"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    },
+                    "confirm_password": {
+                      "type": "string"
+                    },
+                    "address": {
+                      "type": "string"
+                    },
+                    "latitude": {
+                      "type": "string"
+                    },
+                    "longitude": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register/verify": {
+      "patch": {
+        "description": "",
+        "tags": [
+          "User Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": "29e01718-dc8b-11ee-8924-325096b39f47",
+                "verification_code": 612725
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "verification_code": {
+                    "type": "string",
+                    "minLength": 6,
+                    "maxLength": 6
+                  }
+                },
+                "required": [
+                  "id", "verification_code"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "User berhasil diverifikasi"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Verification code salah"
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Verification code kadaluwarsa"
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Id tidak ditemukan"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kesalahan validasi",
+                  "errors": {
+                    "id": "Id tidak boleh kosong",
+                    "verification_code": "Verification code tidak boleh kosong"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "verification_code": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register/resend": {
+      "patch": {
+        "description": "",
+        "tags": [
+          "User Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": "29e01718-dc8b-11ee-8924-325096b39f47"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kode OTP berhasil dikirimkan"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "User sudah terverifikasi"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Id tidak ditemukan"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kesalahan validasi",
+                  "errors": {
+                    "id": "Id tidak boleh kosong"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+     "post": {
+       "description": "",
+       "tags": [
+         "User Authentication"
+       ],
+       "requestBody": {
+         "required": true,
+         "description": "",
+         "content": {
+           "application/json": {
+             "example": {
+               "email": "johndoe@example.com",
+               "password": "password_john_doe"
+             },
+             "schema": {
+               "type": "object",
+               "properties": {
+                 "email": {
+                   "type": "string",
+                   "format": "email"
+                 },
+                 "password": {
+                   "type": "string",
+                   "minLength": 8,
+                   "maxLength": 64
+                 }
+               },
+               "required": [
+                 "email", "password"
+               ]
+             }
+           }
+         }
+       },
+       "responses": {
+         "200": {
+           "description": "",
+           "content": {
+             "application/json": {
+               "example": {
+                 "message": "User berhasil masuk",
+                 "data": {
+                   "access_token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyOWUwMTcxOC1kYzhiLTExZWUtODkyNC0zMjUwOTZiMzlmNDciLCJuYW1lIjoiSm9obiBEb2UiLCJleHBpcmVkX2F0IjoiMTcwOTgzNTk3OCJ9.NH56MkP0aJeYyRqPbOqo-VuMBFq_ADkAEuwPqUxY0Z4",
+                   "refresh_token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyOWUwMTcxOC1kYzhiLTExZWUtODkyNC0zMjUwOTZiMzlmNDciLCJuYW1lIjoiSm9obiBEb2UiLCJleHBpcmVkX2F0IjoiMTcwOTgzNjAxMSJ9.GM2fIW0Pcw4aAbjxN3kCap50l0YmA7DiWS-SySLfj7c"
+                 }
+               },
+               "schema": {
+                 "type": "object",
+                 "properties": {
+                   "message": {
+                     "type": "string"
+                   },
+                   "data": {
+                     "type": "object",
+                     "properties": {
+                       "access_token": {
+                         "type": "string"
+                       },
+                       "refresh_token": {
+                         "type": "string"
+                       }
+                     }
+                   }
+                 }
+               }
+             }
+           }
+         },
+         "401": {
+           "description": "",
+           "content": {
+             "application/json": {
+               "example": {
+                 "message": "Email atau password tidak benar"
+               },
+               "schema": {
+                 "type": "object",
+                 "properties": {
+                   "message": {
+                     "type": "string"
+                   }
+                 }
+               }
+             }
+           }
+         },
+         "403": {
+           "description": "",
+           "content": {
+             "application/json": {
+               "example": {
+                 "message": "User diblokir"
+               },
+               "schema": {
+                 "type": "object",
+                 "properties": {
+                   "message": {
+                     "type": "string"
+                   }
+                 }
+               }
+             }
+           }
+         },
+         "422": {
+           "description": "",
+           "content": {
+             "application/json": {
+               "example": {
+                 "message": "Kesalahan validasi",
+                 "errors": {
+                   "email": "Email tidak boleh kosong",
+                   "password": "Password tidak boleh kosong"
+                 }
+               },
+               "schema": {
+                 "type": "object",
+                 "properties": {
+                   "message": {
+                     "type": "string"
+                   },
+                   "errors": {
+                     "type": "object",
+                     "properties": {
+                       "email": {
+                         "type": "string"
+                       },
+                       "password": {
+                         "type": "string"
+                       }
+                     }
+                   }
+                 }
+               }
+             }
+           }
+         },
+         "500": {
+           "description": "",
+           "content": {
+             "application/json": {
+               "example": {
+                 "message": "Terjadi kesalahan yang tidak terduga"
+               },
+               "schema": {
+                 "type": "object",
+                 "properties": {
+                   "message": {
+                     "type": "string"
+                   }
+                 }
+               }
+             }
+           }
+         }
+       }
+     }
+    },
+    "/auth": {
+      "get": {
+        "description": "",
+        "tags": [
+          "User Authentication"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil mengambil data user",
+                  "data": {
+                    "id": "29e01718-dc8b-11ee-8924-325096b39f47",
+                    "name": "John Doe"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token tidak valid",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "delete": {
+        "description": "",
+        "tags": [
+          "User Authentication"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "User berhasil keluar"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token tidak valid",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/renew-access-token": {
+      "post": {
+        "description": "",
+        "tags": [
+          "User Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": "29e01718-dc8b-11ee-8924-325096b39f47"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil memperbarui access token",
+                  "data": {
+                    "access_token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyOWUwMTcxOC1kYzhiLTExZWUtODkyNC0zMjUwOTZiMzlmNDciLCJuYW1lIjoiSm9obiBEb2UiLCJleHBpcmVkX2F0IjoiMTcwOTgzNjI2OCJ9.5pQENPclbMya8-tW_31cWbhNmPlAYglTRGLMRhRsHJs"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "access_token": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Refresh token tidak valid",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Refresh token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kesalahan validasi",
+                  "errors": {
+                    "id": "Id tidak boleh kosong"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/reset": {
+      "post": {
+        "description": "",
+        "tags": [
+          "User Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "email": "johndoe@example.com"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                },
+                "required": [
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil mengirimkan link reset password"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Email tidak ditemukan"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kesalahan validasi",
+                  "errors": {
+                    "email": "Email tidak boleh kosong"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/reset/{token}":{
+      "get": {
+        "description": "",
+        "tags": [
+          "User Authentication"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Token benar"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Token tidak ditemukan"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "tags": [
+          "User Authentication"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "password": "new_password_john_doe",
+                "confirm_password": "new_password_john_doe"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string"
+                  },
+                  "confirm_password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "password", "confirm_password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Password berhasil diubah"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Token tidak ditemukan"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kesalahan validasi",
+                  "errors": {
+                    "password": "Password tidak boleh kosong",
+                    "confirm_password": "Confirm password tidak boleh kosong"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "password": {
+                          "type": "string"
+                        },
+                        "confirm_password": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
