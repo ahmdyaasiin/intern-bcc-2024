@@ -1,0 +1,8 @@
+# Mac OS file
+.DS_Store
+
+# Configuration file
+.env
+
+# JetBrains file
+.idea/
