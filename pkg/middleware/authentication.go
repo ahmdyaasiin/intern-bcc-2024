@@ -16,10 +16,15 @@ func (m *middleware) AuthenticateUser(ctx *gin.Context) {
 		return
 	}
 
+	expired := false
 	token := strings.Split(bearer, " ")[1]
 	userId, err := m.jwtAuth.ValidateAccessToken(token)
 	if err != nil {
-		response.MessageOnly(ctx, 401, "Unauthorized")
+		if strings.Contains(err.Error(), "expired") {
+			expired = true
+		}
+
+		response.WithExpired(ctx, 401, "Unauthorized", expired)
 		ctx.Abort()
 		return
 	}

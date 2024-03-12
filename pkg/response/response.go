@@ -19,9 +19,21 @@ type Message struct {
 	Message string `json:"message"`
 }
 
+type Expired struct {
+	Message   string `json:"message"`
+	IsExpired bool   `json:"is_expired"`
+}
+
 type ValidationError struct {
 	Message string `json:"message"`
 	Errors  any    `json:"errors"`
+}
+
+func WithExpired(ctx *gin.Context, httpStatusCode int, message string, expired bool) {
+	ctx.JSON(httpStatusCode, Expired{
+		Message:   message,
+		IsExpired: expired,
+	})
 }
 
 func WithData(ctx *gin.Context, httpStatusCode int, message string, data any) {
