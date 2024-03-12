@@ -612,7 +612,7 @@
        }
      }
     },
-    "/auth": {
+    "/auth/my-data": {
       "get": {
         "description": "",
         "tags": [
@@ -809,17 +809,17 @@
           "content": {
             "application/json": {
               "example": {
-                "id": "29e01718-dc8b-11ee-8924-325096b39f47"
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI3NjIxMzQ4NS02OWFhLTQyZmItYTgwYS0yOWFmOTQ2ZGNjZGQiLCJleHAiOjE3MTAyMjI3NzJ9.OHo5tmdYMWpJOjaKXlYU4lflL0uw5l6q3pLwj44YJYU"
               },
               "schema": {
                 "type": "object",
                 "properties": {
-                  "id": {
+                  "refresh_token": {
                     "type": "string"
                   }
                 },
                 "required": [
-                  "id"
+                  "refresh_token"
                 ]
               }
             }
@@ -2001,6 +2001,6 @@
           }
         }
       }
-    },
+    }
   }
 }
