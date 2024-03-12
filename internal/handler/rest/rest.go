@@ -24,7 +24,8 @@ func NewRest(service *service.Service, middleware middleware.Interface) *Rest {
 }
 
 func (r *Rest) MountEndpoint() {
-	r.router.Use(r.middleware.Cors)
+	r.router.Use(r.middleware.Cors())
+	r.router.Use(r.middleware.Timeout())
 
 	routerGroup := r.router.Group("/api/v1")
 	routerGroup.GET("/status", func(c *gin.Context) {
