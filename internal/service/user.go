@@ -173,6 +173,10 @@ func (us *UserService) Login(requests model.RequestForLogin) (model.ResponseForL
 		return res, respDetails
 	}
 
+	if user.StatusAccount == "blocked" {
+		return res, response.Details{Code: 403, Message: "Your account is blocked", Error: errors.New("blocked")}
+	}
+
 	if user.StatusAccount == "inactive" {
 		res.UserID = user.ID
 		return res, response.Details{Code: 403, Message: "Please verify your account first", Error: errors.New("unverified")}
@@ -180,7 +184,7 @@ func (us *UserService) Login(requests model.RequestForLogin) (model.ResponseForL
 
 	err := us.bcrypt.CompareAndHashPassword(user.Password, requests.Password)
 	if err != nil {
-		return res, response.Details{Code: 500, Message: "Failed to generate password", Error: err}
+		return res, response.Details{Code: 500, Message: "Wrong password", Error: err}
 	}
 
 	accessToken, err := us.jwtAuth.CreateAccessToken(user.ID)

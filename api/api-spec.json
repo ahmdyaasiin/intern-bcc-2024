@@ -264,24 +264,6 @@
               }
             }
           },
-          "404": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Id tidak ditemukan"
-                },
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
           "422": {
             "description": "",
             "content": {
@@ -379,26 +361,17 @@
             "description": "",
             "content": {
               "application/json": {
-                "example": {
-                  "message": "User sudah terverifikasi"
-                },
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
+                "examples": {
+                  "Verified": {
+                    "value": {
+                      "message": "User sudah diverifikasi sebelumnya"
+                    }
+                  },
+                  "Limit": {
+                    "value": {
+                      "message": "Tolong tunggu 5 menit lagi"
                     }
                   }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Id tidak ditemukan"
                 },
                 "schema": {
                   "type": "object",
@@ -544,8 +517,20 @@
            "description": "",
            "content": {
              "application/json": {
-               "example": {
-                 "message": "User diblokir"
+               "examples": {
+                 "Unverified": {
+                   "value": {
+                     "message" : "Tolong verifikasi akun anda terlebih dahulu",
+                     "data": {
+                       "id": "29e01718-dc8b-11ee-8924-325096b39f47"
+                     }
+                   }
+                 },
+                 "Blocked": {
+                   "value": {
+                     "message": "User diblokir"
+                   }
+                 }
                },
                "schema": {
                  "type": "object",
@@ -633,8 +618,13 @@
                 "example": {
                   "message": "Berhasil mengambil data user",
                   "data": {
-                    "id": "29e01718-dc8b-11ee-8924-325096b39f47",
-                    "name": "John Doe"
+                    "id": "04dd0554-59fd-48d1-aaea-3dcea478cddd",
+                    "name": "John Doe",
+                    "email": "johndoe@student.ub.ac.id",
+                    "address": "Jl. Veteran, Ketawanggede, Kec. Lowokwaru, Kota Malang, Jawa Timur 65145",
+                    "latitude": -7.952176,
+                    "longitude": 112.61269,
+                    "url_photo_profile": "default.jpg"
                   }
                 },
                 "schema": {
@@ -650,6 +640,22 @@
                           "type": "string"
                         },
                         "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string",
+                          "format": "email"
+                        },
+                        "address": {
+                          "type": "string"
+                        },
+                        "latitude": {
+                          "type": "number"
+                        },
+                        "longitude": {
+                          "type": "number"
+                        },
+                        "url_photo_profile": {
                           "type": "string"
                         }
                       }
@@ -985,6 +991,24 @@
               }
             }
           },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Tolong tunggu 5 menit lagi"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "404": {
             "description": "",
             "content": {
@@ -1085,24 +1109,6 @@
               }
             }
           },
-          "404": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Token tidak ditemukan"
-                },
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
           "500": {
             "description": "",
             "content": {
@@ -1168,24 +1174,6 @@
               "application/json": {
                 "example": {
                   "message": "Password berhasil diubah"
-                },
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Token tidak ditemukan"
                 },
                 "schema": {
                   "type": "object",

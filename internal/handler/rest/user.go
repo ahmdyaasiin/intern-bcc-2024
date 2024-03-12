@@ -7,6 +7,7 @@ import (
 	"intern-bcc-2024/model"
 	"intern-bcc-2024/pkg/response"
 	"intern-bcc-2024/pkg/validation"
+	"strings"
 )
 
 func (r *Rest) RegisterAccount(ctx *gin.Context) {
@@ -97,8 +98,7 @@ func (r *Rest) LoginAccount(ctx *gin.Context) {
 	}
 
 	tokens, respDetails := r.service.UserService.Login(requests)
-	if respDetails.Code == 403 {
-
+	if strings.Contains(respDetails.Error.Error(), "unverified") {
 		response.WithData(ctx, respDetails.Code, respDetails.Message, model.ResponseForRegister{
 			ID: tokens.UserID,
 		})

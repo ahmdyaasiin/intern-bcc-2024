@@ -67,3 +67,13 @@ type ResponseForLogin struct {
 type ResponseForRenew struct {
 	AccessToken string `json:"access_token"`
 }
+
+type ResponseForMyData struct {
+	ID              uuid.UUID `json:"id"`
+	Name            string    `json:"name"`
+	Email           string    `json:"email"`
+	Address         string    `json:"address"`
+	Latitude        float64   `json:"latitude"`
+	Longitude       float64   `json:"longitude"`
+	UrlPhotoProfile string    `json:"url_photo_profile"`
+}
