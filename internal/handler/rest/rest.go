@@ -2,51 +2,49 @@ package rest
 
 import (
 	"fmt"
-	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"intern-bcc-2024/internal/service"
+	"intern-bcc-2024/pkg/middleware"
 	"log"
 	"os"
-	"time"
 )
 
 type Rest struct {
-	router  *gin.Engine
-	service *service.Service
+	router     *gin.Engine
+	service    *service.Service
+	middleware middleware.Interface
 }
 
-func NewRest(service *service.Service) *Rest {
+func NewRest(service *service.Service, middleware middleware.Interface) *Rest {
 	return &Rest{
-		router:  gin.Default(),
-		service: service,
+		router:     gin.Default(),
+		service:    service,
+		middleware: middleware,
 	}
 }
 
 func (r *Rest) MountEndpoint() {
-	routerGroup := r.router.Group("/api/v1")
-	config := cors.DefaultConfig()
-	config.AllowAllOrigins = true
-	config.AllowCredentials = true
-	config.AllowMethods = []string{"POST", "GET", "PUT", "OPTIONS"}
-	config.AllowHeaders = []string{"Origin", "Content-Type", "Authorization", "Accept", "User-Agent", "Cache-Control", "Pragma"}
-	config.ExposeHeaders = []string{"Content-Length"}
-	config.AllowCredentials = true
-	config.MaxAge = 12 * time.Hour
+	r.router.Use(r.middleware.Cors)
 
-	routerGroup.Use(cors.New(config))
+	routerGroup := r.router.Group("/api/v1")
+	routerGroup.GET("/status", func(c *gin.Context) {
+		c.JSON(200, "Server OK!")
+	})
+
 	auth := routerGroup.Group("/auth")
-	auth.POST("/register", r.Register)
-	auth.PATCH("/register/verify", r.Verify)
-	auth.PATCH("/register/resend", r.Resend)
-	////
-	auth.POST("/login", r.Login)
-	//auth.PATCH("", func(context *gin.Context) {})
-	//auth.PATCH("/logout", func(context *gin.Context) {})
-	auth.POST("/renew-access-token", r.Renew)
-	//
-	auth.POST("/reset", r.Reset)
-	auth.GET("/reset/:token", r.ResetGet)
-	auth.PATCH("/reset/:token", r.ResetPost)
+	auth.POST("/register", r.RegisterAccount)
+	auth.PATCH("/register/verify", r.VerifyAccount)
+	auth.PATCH("/register/resend", r.ResendOtp)
+	auth.POST("/reset", r.ResetPassword)
+	auth.GET("/reset/:token", r.CheckToken)
+	auth.PATCH("/reset/:token", r.ChangePassword)
+	auth.POST("/login", r.LoginAccount)
+	auth.POST("/renew-access-token", r.RenewSession)
+	auth.DELETE("/logout", r.middleware.AuthenticateUser, r.LogoutAccount)
+	auth.GET("/my-data", r.middleware.AuthenticateUser, r.MyData)
+
+	//////
+
 }
 
 func (r *Rest) Run() {

@@ -8,6 +8,7 @@ import (
 	"intern-bcc-2024/pkg/config"
 	"intern-bcc-2024/pkg/database/mysql"
 	"intern-bcc-2024/pkg/jwt"
+	"intern-bcc-2024/pkg/middleware"
 	"intern-bcc-2024/pkg/validation"
 )
 
@@ -23,7 +24,9 @@ func main() {
 	repo := repository.NewRepository(db)
 	srvc := service.NewService(service.InitParam{Repository: repo, Bcrypt: h_bcrypt, JwtAuth: jwtAuth})
 
-	r := rest.NewRest(srvc)
+	mw := middleware.Init(jwtAuth, srvc)
+
+	r := rest.NewRest(srvc, mw)
 	r.MountEndpoint()
 	r.Run()
 }

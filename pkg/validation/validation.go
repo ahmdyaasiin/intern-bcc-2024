@@ -1,6 +1,7 @@
 package validation
 
 import (
+	"errors"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
 	"log"
@@ -25,6 +26,19 @@ func GetField(fe validator.FieldError) string {
 	}
 
 	return strings.ToLower(builder.String())
+}
+
+func GetError(err error, ve validator.ValidationErrors) any {
+	if errors.As(err, &ve) {
+		out := make(map[string]string)
+		for _, fe := range ve {
+			out[GetField(fe)] = GetErrorMsg(fe)
+		}
+
+		return out
+	}
+
+	return nil
 }
 
 func GetErrorMsg(fe validator.FieldError) string {

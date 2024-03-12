@@ -4,47 +4,41 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Response struct {
+type Details struct {
+	Code    int
+	Message string
+	Error   error
+}
+
+type Success struct {
 	Message string `json:"message"`
 	Data    any    `json:"data"`
 }
 
-type ResponseMessage struct {
+type Message struct {
 	Message string `json:"message"`
 }
 
-type ResponseError struct {
-	Message string `json:"message"`
-	Error   any    `json:"error"`
-}
-
-type ResponseValidationError struct {
+type ValidationError struct {
 	Message string `json:"message"`
 	Errors  any    `json:"errors"`
 }
 
-func Success(ctx *gin.Context, httpStatusCode int, message string, data any) {
-	ctx.JSON(httpStatusCode, Response{
+func WithData(ctx *gin.Context, httpStatusCode int, message string, data any) {
+	ctx.JSON(httpStatusCode, Success{
 		Message: message,
 		Data:    data,
 	})
 }
 
-func Message(ctx *gin.Context, httpStatusCode int, message string) {
-	ctx.JSON(httpStatusCode, ResponseMessage{
+func MessageOnly(ctx *gin.Context, httpStatusCode int, message string) {
+	ctx.JSON(httpStatusCode, Message{
 		Message: message,
 	})
 }
 
-func Error(ctx *gin.Context, httpStatusCode int, message string, err error) {
-	ctx.JSON(httpStatusCode, ResponseError{
-		Message: message,
-		Error:   err.Error(),
-	})
-}
-
-func ValidationError(ctx *gin.Context, httpStatusCode int, message string, errors any) {
-	ctx.JSON(httpStatusCode, ResponseValidationError{
+func WithErrors(ctx *gin.Context, httpStatusCode int, message string, errors any) {
+	ctx.JSON(httpStatusCode, ValidationError{
 		Message: message,
 		Errors:  errors,
 	})
