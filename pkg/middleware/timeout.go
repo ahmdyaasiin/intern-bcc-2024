@@ -23,5 +23,5 @@ func (m *middleware) Timeout() gin.HandlerFunc {
 }
 
 func timeoutResponse(c *gin.Context) {
-	response.MessageOnly(c, 408, "Please try again. The request take to much time")
+	response.MessageOnly(c, 408, "Please try again. The request takes to much time")
 }
