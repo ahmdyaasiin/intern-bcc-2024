@@ -1241,20 +1241,11 @@
       }
     },
 
-    "/product": {
+    "/product/": {
       "get": {
         "description": "",
         "tags": [
-          "Get Product"
-        ],
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "default": 1
-            }
-          }
+          "Product"
         ],
         "responses": {
           "200": {
@@ -1262,47 +1253,8 @@
             "content": {
               "application/json": {
                 "example": {
-                  "message": "Berhasil mendapatkan produk",
-                  "data": {
-                    "products": [
-                      {
-                        "owner": {
-                          "id": "355a52b2-dcb7-11ee-aa78-325096b39f47",
-                          "name": "Ira Melani"
-                        },
-                        "product": {
-                          "id": "658c03ea-dcb7-11ee-ab7b-325096b39f47",
-                          "name": "Ini barang satu",
-                          "price": 50000,
-                          "url_product": "example.jpg"
-                        }
-                      },
-                      {
-                        "owner": {
-                          "id": "3b2dab26-dcb7-11ee-906e-325096b39f47",
-                          "name": "Pranata Tampubolon"
-                        },
-                        "product": {
-                          "id": "8195a708-dcb7-11ee-b876-325096b39f47",
-                          "name": "Ini barang dua",
-                          "price": 15000,
-                          "url_product": "example.jpg"
-                        }
-                      },
-                      {
-                        "owner": {
-                          "id": "a2302902-dcb7-11ee-ba49-325096b39f47",
-                          "name": "Queen Puspita"
-                        },
-                        "product": {
-                          "id": "a5ef73fe-dcb7-11ee-8581-325096b39f47",
-                          "name": "Ini barang tiga",
-                          "price": 7900,
-                          "url_product": "example.jpg"
-                        }
-                      }
-                    ],
-                    "categories": [
+                  "message": "Berhasil mendapatkan semua category",
+                  "data": [
                       {
                         "id": "cb04dbda-dcb6-11ee-830c-325096b39f47",
                         "name": "baju",
@@ -1321,8 +1273,7 @@
                         "url_category": "example.jpg",
                         "total_product": 3
                       }
-                    ]
-                  }
+                  ]
                 },
                 "schema": {
                   "type": "object",
@@ -1331,110 +1282,22 @@
                       "type": "string"
                     },
                     "data": {
-                      "type": "object",
-                      "properties": {
-                        "products": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "owner": {
-                                "type": "object",
-                                "properties": {
-                                  "id": {
-                                    "type": "string"
-                                  },
-                                  "name": {
-                                    "type": "string"
-                                  }
-                                }
-                              },
-                              "product": {
-                                "type": "object",
-                                "properties": {
-                                  "id": {
-                                    "type": "string"
-                                  },
-                                  "name": {
-                                    "type": "string"
-                                  },
-                                  "price": {
-                                    "type": "integer"
-                                  },
-                                  "url_product": {
-                                    "type": "string"
-                                  }
-                                }
-                              }
-                            }
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "url_category": {
+                            "type": "string"
+                          },
+                          "total_product": {
+                            "type": "integer"
                           }
-                        },
-                        "categories": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "string"
-                              },
-                              "name": {
-                                "type": "string"
-                              },
-                              "url_category": {
-                                "type": "string"
-                              },
-                              "total_product": {
-                                "type": "integer"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Produk tidak ditemukan"
-                },
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "example": {
-                  "message": "Kesalahan validasi",
-                  "errors": {
-                    "page": "Page harus bernilai positif"
-                  }
-                },
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    },
-                    "errors": {
-                      "type": "object",
-                      "properties": {
-                        "page": {
-                          "type": "string"
                         }
                       }
                     }
@@ -1468,7 +1331,7 @@
       "get": {
         "description": "",
         "tags": [
-          "Get Product"
+          "Product"
         ],
         "parameters": [
           {
@@ -1802,7 +1665,7 @@
       "get": {
         "description": "",
         "tags": [
-          "Get Product"
+          "Product"
         ],
         "parameters": [
           {
@@ -1987,6 +1850,35 @@
               }
             }
           }
+        }
+      }
+    },
+    "/product/{id}/buy" : {
+      "post": {
+        "description": "",
+        "tags": [
+          "Product"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+
+          }
+        },
+        "responses": {
+
         }
       }
     }

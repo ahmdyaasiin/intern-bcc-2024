@@ -45,6 +45,11 @@ func (r *Rest) MountEndpoint() {
 	auth.GET("/my-data", r.middleware.AuthenticateUser, r.MyData)
 
 	//////
+	product := routerGroup.Group("/product")
+	product.GET("/", r.HomePage)
+	product.GET("/:id", r.middleware.AuthenticateUser)
+	product.POST("/:id/buy", r.middleware.AuthenticateUser)
+	product.GET("/search", r.middleware.AuthenticateUser)
 
 }
 
