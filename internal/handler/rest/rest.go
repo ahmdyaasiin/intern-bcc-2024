@@ -49,15 +49,18 @@ func (r *Rest) MountEndpoint() {
 	product.GET("/", r.HomePage)
 	product.GET("/:id", r.middleware.AuthenticateUser)
 	product.POST("/:id/buy", r.middleware.AuthenticateUser)
-	product.GET("/search", r.middleware.AuthenticateUser)
+	product.GET("/search", r.middleware.AuthenticateUser, r.SearchProducts)
 
 }
 
 func (r *Rest) Run() {
-	addr := os.Getenv("APP_ADDRESS")
+	_ = os.Getenv("APP_ADDRESS")
 	port := os.Getenv("APP_PORT")
+	if port == "" {
+		port = "5000"
+	}
 
-	err := r.router.Run(fmt.Sprintf("%s:%s", addr, port))
+	err := r.router.Run(fmt.Sprintf(":%s", port))
 	if err != nil {
 		log.Fatalf("Error while serving: %v", err)
 	}
