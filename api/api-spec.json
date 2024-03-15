@@ -874,7 +874,7 @@
                   },
                   "Expired": {
                     "value": {
-                      "message": "Refresh token kadaluwarsa",
+                      "message": "Access token kadaluwarsa",
                       "is_expired": true
                     }
                   }
@@ -1341,8 +1341,7 @@
           },
           {
             "name": "query",
-            "in": "path",
-            "required": true
+            "in": "path"
           },
           {
             "name": "category",
