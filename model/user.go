@@ -7,6 +7,7 @@ type ParamForFind struct {
 	UserID uuid.UUID
 	Email  string
 	Token  string
+	Name   string
 }
 
 /*
