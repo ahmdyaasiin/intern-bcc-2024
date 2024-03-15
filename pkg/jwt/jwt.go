@@ -33,7 +33,9 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-func Init() Interface {
+var PKG *jsonWebToken
+
+func Init() {
 	aSecretKey := os.Getenv("SECRET_KEY_ACCESS_TOKEN")
 	aExpiredTime, err := strconv.Atoi(os.Getenv("ACCESS_TOKEN_TIME"))
 	rSecretKey := os.Getenv("SECRET_KEY_REFRESH_TOKEN")
@@ -42,7 +44,7 @@ func Init() Interface {
 		log.Fatalf("failed set expired time for jwt : %v", err.Error())
 	}
 
-	return &jsonWebToken{
+	PKG = &jsonWebToken{
 		ASecretKey:   aSecretKey,
 		AExpiredTime: time.Duration(aExpiredTime) * time.Minute,
 		RSecretKey:   rSecretKey,
