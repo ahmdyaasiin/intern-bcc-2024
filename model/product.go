@@ -9,6 +9,7 @@ type RequestForSearch struct {
 	Page      int
 	Latitude  float64
 	Longitude float64
+	UserID    uuid.UUID
 }
 
 type ResponseForSearch struct {

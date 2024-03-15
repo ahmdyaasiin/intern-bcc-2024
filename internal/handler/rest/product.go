@@ -37,7 +37,7 @@ func (r *Rest) SearchProducts(ctx *gin.Context) {
 	}
 
 	products, respDetails := r.service.ProductService.SearchProducts(model.RequestForSearch{
-		Query: query, Category: category, Sort: sort, Page: page, Latitude: user.(entity.User).Latitude, Longitude: user.(entity.User).Longitude,
+		Query: query, Category: category, Sort: sort, Page: page, Latitude: user.(entity.User).Latitude, Longitude: user.(entity.User).Longitude, UserID: user.(entity.User).ID,
 	})
 	if respDetails.Error != nil {
 		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)

@@ -19,6 +19,7 @@ func main() {
 	bcrypt.Init()
 	mysql.ConnectDatabase()
 	mysql.Migrate(mysql.Connection)
+	mysql.SeedData(mysql.Connection)
 
 	repo := repository.NewRepository(mysql.Connection)
 	srvc := service.NewService(service.InitParam{Repository: repo, Bcrypt: bcrypt.PKG, JwtAuth: jwt.PKG})

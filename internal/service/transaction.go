@@ -7,6 +7,7 @@ import (
 	"intern-bcc-2024/internal/repository"
 	"intern-bcc-2024/model"
 	"intern-bcc-2024/pkg/jwt"
+	md "intern-bcc-2024/pkg/midtrans"
 	"intern-bcc-2024/pkg/response"
 )
 
@@ -54,7 +55,12 @@ func (ts *TransactionService) BuyProduct(ctx *gin.Context, id uuid.UUID) (model.
 		return model.ResponseForBuyProduct{}, respDetails
 	}
 
+	paymentID, respDetails := md.CreateToken(&product)
+	if respDetails.Error != nil {
+		return model.ResponseForBuyProduct{}, respDetails
+	}
+
 	return model.ResponseForBuyProduct{
-		PaymentID: transaction.ID, // seharusnya snap id midtrans
+		PaymentID: paymentID, // seharusnya snap id midtrans
 	}, response.Details{Code: 200, Message: "Success create transaction", Error: nil}
 }

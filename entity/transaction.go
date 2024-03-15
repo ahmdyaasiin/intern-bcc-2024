@@ -8,6 +8,7 @@ type Transaction struct {
 	ProductID uuid.UUID `json:"product_id" gorm:"type:varchar(36);not null"`
 	Amount    uint64    `json:"amount" gorm:"not null"`
 	Status    string    `json:"status" gorm:"type:enum('failed', 'on progress', 'success')"`
+	ExpiredAt int64     `gorm:"not null"`
 	CreatedAt int64     `json:"-" gorm:"autoCreateTime:milli;not null"`
 	UpdatedAt int64     `json:"-" gorm:"autoCreateTime:milli;autoUpdateTime:milli;not null"`
 }
