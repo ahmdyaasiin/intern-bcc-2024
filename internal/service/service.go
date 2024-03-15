@@ -7,12 +7,13 @@ import (
 )
 
 type Service struct {
-	UserService     IUserService
-	OtpService      IOtpService
-	TokenService    ITokenService
-	SessionService  ISessionService
-	ProductService  IProductService
-	CategoryService ICategoryService
+	UserService        IUserService
+	OtpService         IOtpService
+	TokenService       ITokenService
+	SessionService     ISessionService
+	ProductService     IProductService
+	CategoryService    ICategoryService
+	TransactionService ITransactionService
 }
 
 type InitParam struct {
@@ -26,15 +27,17 @@ func NewService(param InitParam) *Service {
 	otpService := NewOtpService(param.Repository.OtpRepository, param.Repository.UserRepository)
 	sessionService := NewSessionService(param.Repository.SessionRepository, param.JwtAuth)
 	tokenService := NewTokenService(param.Repository.TokenRepository, param.Repository.UserRepository)
-	productService := NewProductService(param.Repository.ProductRepository)
+	productService := NewProductService(param.Repository.ProductRepository, param.Repository.MediaRepository, param.Repository.UserRepository, param.JwtAuth)
 	categoryService := NewCategoryService(param.Repository.CategoryRepository)
+	transactionService := NewTransactionService(param.Repository.ProductRepository, param.Repository.TransactionRepository, param.JwtAuth)
 
 	return &Service{
-		UserService:     userService,
-		OtpService:      otpService,
-		TokenService:    tokenService,
-		SessionService:  sessionService,
-		ProductService:  productService,
-		CategoryService: categoryService,
+		UserService:        userService,
+		OtpService:         otpService,
+		TokenService:       tokenService,
+		SessionService:     sessionService,
+		ProductService:     productService,
+		CategoryService:    categoryService,
+		TransactionService: transactionService,
 	}
 }

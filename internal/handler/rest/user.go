@@ -24,15 +24,13 @@ func (r *Rest) RegisterAccount(ctx *gin.Context) {
 		return
 	}
 
-	user, respDetails := r.service.UserService.Register(requests)
+	userID, respDetails := r.service.UserService.Register(requests)
 	if respDetails.Error != nil {
 		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
 		return
 	}
 
-	response.WithData(ctx, 201, "User has been successfully registered", model.ResponseForRegister{
-		ID: user.ID,
-	})
+	response.WithData(ctx, 201, "User has been successfully registered", userID)
 
 }
 
@@ -98,7 +96,7 @@ func (r *Rest) LoginAccount(ctx *gin.Context) {
 	}
 
 	tokens, respDetails := r.service.UserService.Login(requests)
-	if strings.Contains(respDetails.Error.Error(), "unverified") {
+	if strings.Contains(respDetails.Message, "verify") {
 		response.WithData(ctx, respDetails.Code, respDetails.Message, model.ResponseForRegister{
 			ID: tokens.UserID,
 		})
@@ -122,6 +120,5 @@ func (r *Rest) MyData(ctx *gin.Context) {
 		return
 	}
 
-	response.WithData(ctx, 200, "Success get data", user.(entity.User))
-	return
+	response.WithData(ctx, 200, "Success to get data", user.(entity.User))
 }

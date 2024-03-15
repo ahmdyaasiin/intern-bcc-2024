@@ -28,9 +28,7 @@ func (r *Rest) MountEndpoint() {
 	r.router.Use(r.middleware.Timeout())
 
 	routerGroup := r.router.Group("/api/v1")
-	routerGroup.GET("/status", func(c *gin.Context) {
-		c.JSON(200, "Server OK!")
-	})
+	routerGroup.GET("/status", CheckStatus)
 
 	auth := routerGroup.Group("/auth")
 	auth.POST("/register", r.RegisterAccount)
@@ -45,17 +43,20 @@ func (r *Rest) MountEndpoint() {
 	auth.GET("/my-data", r.middleware.AuthenticateUser, r.MyData)
 
 	//////
-	//product := routerGroup.Group("/product")
-	//product.GET("/", r.HomePage)
-	//product.GET("/:id", r.middleware.AuthenticateUser)
-	//product.POST("/:id/buy", r.middleware.AuthenticateUser)
-	//product.GET("/search", r.middleware.AuthenticateUser, r.SearchProducts)
+	product := routerGroup.Group("/product")
+	product.GET("/", r.HomePage)
+	product.GET("/:id", r.middleware.AuthenticateUser, r.GetProduct)
+	product.POST("/:id/buy", r.middleware.AuthenticateUser, r.BuyProduct)
+	product.GET("/search", r.middleware.AuthenticateUser, r.SearchProducts)
 
 }
 
+func CheckStatus(c *gin.Context) {
+	c.JSON(200, "Server OK!")
+}
+
 func (r *Rest) Run() {
-	_ = os.Getenv("APP_ADDRESS")
-	port := os.Getenv("APP_PORT")
+	port := os.Getenv("PORT")
 	if port == "" {
 		port = "5000"
 	}

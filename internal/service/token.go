@@ -53,7 +53,7 @@ func (ts *TokenService) ResetPassword(requests model.RequestForReset) response.D
 	}
 
 	link := mail.GenerateRandomString(30)
-	if err := mail.SendEmail(user.Email, "Link Reset Password", "Your link: "+os.Getenv("LINK_FRONTEND")+link); err != nil {
+	if err := mail.SendEmail(user.Email, "Link Reset Password", "Your link: "+os.Getenv("LINK_FRONTEND")+"/resetconfirm/"+link); err != nil {
 		fmt.Println(err)
 		return response.Details{Code: 500, Message: "Failed to send link reset password", Error: err}
 	}

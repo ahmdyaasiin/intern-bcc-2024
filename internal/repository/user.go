@@ -18,11 +18,10 @@ type IUserRepository interface {
 
 type UserRepository struct {
 	db *gorm.DB
-	or IOtpRepository // delete this, i guess
 }
 
-func NewUserRepository(db *gorm.DB, or IOtpRepository) IUserRepository {
-	return &UserRepository{db, or}
+func NewUserRepository(db *gorm.DB) IUserRepository {
+	return &UserRepository{db}
 }
 
 func (ur *UserRepository) Find(param model.ParamForFind) (entity.User, response.Details) {

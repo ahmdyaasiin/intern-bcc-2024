@@ -16,7 +16,7 @@ import (
 )
 
 type IUserService interface {
-	Register(requests model.RequestForRegister) (*entity.User, response.Details)
+	Register(requests model.RequestForRegister) (model.ResponseForRegister, response.Details)
 	Verify(requests model.RequestForVerify) response.Details
 	ChangePassword(token string, request model.RequestForChangePassword) response.Details
 	Login(requests model.RequestForLogin) (model.ResponseForLogin, response.Details)
@@ -43,17 +43,17 @@ func NewUserService(userRepository repository.IUserRepository, otpRepository rep
 	}
 }
 
-func (us *UserService) Register(requests model.RequestForRegister) (*entity.User, response.Details) {
+func (us *UserService) Register(requests model.RequestForRegister) (model.ResponseForRegister, response.Details) {
 	_, respDetails := us.ur.Find(model.ParamForFind{
 		Email: requests.Email,
 	})
 	if respDetails.Error == nil {
-		return nil, response.Details{Code: 209, Message: "Email has been registered", Error: errors.New("email registered")}
+		return model.ResponseForRegister{}, response.Details{Code: 409, Message: "Email has been registered", Error: errors.New("email registered")}
 	}
 
 	hashPassword, err := us.bcrypt.GenerateFromPassword(requests.Password)
 	if err != nil {
-		return nil, response.Details{Code: 500, Message: "Failed to generate password", Error: err}
+		return model.ResponseForRegister{}, response.Details{Code: 500, Message: "Failed to generate password", Error: err}
 	}
 
 	user := &entity.User{
@@ -70,13 +70,13 @@ func (us *UserService) Register(requests model.RequestForRegister) (*entity.User
 
 	respDetails = us.ur.Create(user)
 	if respDetails.Error != nil {
-		return nil, respDetails
+		return model.ResponseForRegister{}, respDetails
 	}
 
 	code := mail.GenerateVerificationCode()
 	expiredTime, err := strconv.Atoi(os.Getenv("EXPIRED_OTP"))
 	if err != nil {
-		return nil, response.Details{Code: 500, Message: "Failed to convert expired time from .env", Error: err}
+		return model.ResponseForRegister{}, response.Details{Code: 500, Message: "Failed to convert expired time from .env", Error: err}
 	}
 
 	otp := &entity.OtpCode{
@@ -89,17 +89,16 @@ func (us *UserService) Register(requests model.RequestForRegister) (*entity.User
 
 	respDetails = us.or.Create(otp)
 	if respDetails.Error != nil {
-		return nil, respDetails
+		return model.ResponseForRegister{}, respDetails
 	}
-
-	// fake scenario
-	//return nil, response.Details{Code: 500, Message: "Failed to send verification code to user", Error: errors.New("fake scenario")}
 
 	if err = mail.SendEmail(user.Email, "Verification Code", "Your Verification Code: "+code); err != nil {
-		return nil, response.Details{Code: 500, Message: "Failed to send verification code to user, please login and resend your code", Error: err}
+		return model.ResponseForRegister{}, response.Details{Code: 500, Message: "Failed to send verification code to user, please login and resend your code", Error: err}
 	}
 
-	return user, response.Details{Code: 201, Message: "Success register", Error: nil}
+	return model.ResponseForRegister{
+		ID: user.ID,
+	}, response.Details{Code: 201, Message: "Success register", Error: nil}
 }
 
 func (us *UserService) Verify(requests model.RequestForVerify) response.Details {

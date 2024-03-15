@@ -39,5 +39,4 @@ func (r *Rest) LogoutAccount(ctx *gin.Context) {
 	}
 
 	response.MessageOnly(ctx, 200, "User logout successfully")
-	return
 }
