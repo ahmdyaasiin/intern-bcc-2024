@@ -12,5 +12,6 @@ type Product struct {
 	CreatedAt   int64     `gorm:"autoCreateTime:milli;not null"`
 	UpdatedAt   int64     `gorm:"autoCreateTime:milli;autoUpdateTime:milli;not null"`
 
-	Media []Media `gorm:"foreignKey:product_id;references:id"`
+	Media       []Media       `gorm:"foreignKey:product_id;references:id"`
+	Transaction []Transaction `json:"-" gorm:"foreignKey:product_id;references:id"`
 }

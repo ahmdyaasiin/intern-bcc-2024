@@ -22,4 +22,5 @@ type User struct {
 	RefreshToken []RefreshToken `json:"-" gorm:"foreignKey:user_id;references:id"`
 	ResetToken   []ResetToken   `json:"-" gorm:"foreignKey:user_id;references:id"`
 	Product      []Product      `json:"-" gorm:"foreignKey:user_id;references:id"`
+	Transaction  []Transaction  `json:"-" gorm:"foreignKey:user_id;references:id"`
 }
