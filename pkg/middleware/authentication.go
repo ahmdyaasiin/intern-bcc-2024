@@ -17,7 +17,15 @@ func (m *middleware) AuthenticateUser(ctx *gin.Context) {
 	}
 
 	expired := false
-	token := strings.Split(bearer, " ")[1]
+	tokenSplit := strings.Split(bearer, " ")
+	if len(tokenSplit) <= 1 {
+		response.MessageOnly(ctx, 401, "Authorization header is missing. Please provide valid authentication credentials")
+		ctx.Abort()
+		return
+	}
+
+	token := tokenSplit[1]
+
 	userId, err := m.jwtAuth.ValidateAccessToken(token)
 	if err != nil {
 		if strings.Contains(err.Error(), "expired") {

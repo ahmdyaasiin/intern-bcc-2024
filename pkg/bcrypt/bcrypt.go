@@ -11,8 +11,10 @@ type bcrypt struct {
 	cost int
 }
 
-func Init() Interface {
-	return &bcrypt{
+var PKG *bcrypt
+
+func Init() {
+	PKG = &bcrypt{
 		cost: 10,
 	}
 }

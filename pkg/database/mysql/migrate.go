@@ -17,6 +17,7 @@ func Migrate(db *gorm.DB) {
 		&entity.Product{},
 		&entity.Media{},
 		&entity.Admin{},
+		&entity.Transaction{},
 	); err != nil {
 		log.Fatal(err)
 	}

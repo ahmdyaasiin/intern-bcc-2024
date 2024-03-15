@@ -35,7 +35,7 @@ func GenerateVerificationCode() string {
 }
 
 func GenerateRandomString(length int) string {
-	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	const charset = "abcdefghijklmnopqrstuvwxyz1234567890"
 	seed := rand.NewSource(time.Now().UnixNano())
 	random := rand.New(seed)
 
