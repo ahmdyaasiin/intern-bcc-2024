@@ -11,7 +11,14 @@ import (
 )
 
 func (m *middleware) Timeout() gin.HandlerFunc {
-	timeLimit, _ := strconv.Atoi(os.Getenv("TIME_OUT_LIMIT"))
+	timeLimit, err := strconv.Atoi(os.Getenv("TIME_OUT_LIMIT"))
+	if err != nil {
+		return func(c *gin.Context) {
+			response.MessageOnly(c, 500, "Failed convert TIME_OUT_LIMIT value")
+			c.Abort()
+			return
+		}
+	}
 
 	return timeout.New(
 		timeout.WithTimeout(time.Duration(timeLimit)*time.Second),
