@@ -8,4 +8,5 @@ type RefreshToken struct {
 	Token     string    `gorm:"type:varchar(255);not null;unique"`
 	ExpiredAt int64     `gorm:"not null"`
 	CreatedAt int64     `gorm:"autoCreateTime:milli;not null"`
+	UpdatedAt int64     `gorm:"autoCreateTime:milli;autoUpdateTime:milli;not null"`
 }

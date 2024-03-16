@@ -7,6 +7,7 @@ type Category struct {
 	Name        string    `json:"name" gorm:"type:varchar(255);not null"`
 	UrlCategory string    `json:"url_category" gorm:"type:varchar(255);not null"`
 	CreatedAt   int64     `json:"-" gorm:"autoCreateTime:milli;not null"`
+	UpdatedAt   int64     `gorm:"autoCreateTime:milli;autoUpdateTime:milli;not null"`
 
 	Product []Product `json:"-" gorm:"foreignKey:category_id;references:id"`
 }

@@ -9,4 +9,5 @@ type ResetToken struct {
 	LastSentAt int64     `gorm:"autoCreateTime:milli;autoUpdateTime:milli;not null"`
 	ExpiredAt  int64     `gorm:"not null"`
 	CreatedAt  int64     `gorm:"autoCreateTime:milli;not null"`
+	UpdatedAt  int64     `gorm:"autoCreateTime:milli;autoUpdateTime:milli;not null"`
 }
