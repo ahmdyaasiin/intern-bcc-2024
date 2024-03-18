@@ -41,13 +41,18 @@ func (r *Rest) Register(ctx *gin.Context) {
 
 func (r *Rest) VerifyAfterRegister(ctx *gin.Context) {
 	var requests model.RequestForVerify
+
 	if err := ctx.ShouldBindJSON(&requests); err != nil {
 		var ve validator.ValidationErrors
 		errorList := validation.GetError(err, ve)
 		if errorList != nil {
+			log.Println("Failed to validate user requests")
+
 			response.WithErrors(ctx, 422, "Failed to validate user requests", errorList)
 			return
 		}
+
+		log.Println("Failed to bind requests")
 
 		response.MessageOnly(ctx, 422, "Failed to bind requests")
 		return
@@ -64,13 +69,18 @@ func (r *Rest) VerifyAfterRegister(ctx *gin.Context) {
 
 func (r *Rest) ChangePasswordFromReset(ctx *gin.Context) {
 	var requests model.RequestForChangePassword
+
 	if err := ctx.ShouldBindJSON(&requests); err != nil {
 		var ve validator.ValidationErrors
 		errorList := validation.GetError(err, ve)
 		if errorList != nil {
+			log.Println("Failed to validate user requests")
+
 			response.WithErrors(ctx, 422, "Failed to validate user requests", errorList)
 			return
 		}
+
+		log.Println("Failed to bind requests")
 
 		response.MessageOnly(ctx, 422, "Failed to bind requests")
 		return
@@ -88,13 +98,18 @@ func (r *Rest) ChangePasswordFromReset(ctx *gin.Context) {
 
 func (r *Rest) Login(ctx *gin.Context) {
 	var requests model.RequestForLogin
+
 	if err := ctx.ShouldBindJSON(&requests); err != nil {
 		var ve validator.ValidationErrors
 		errorList := validation.GetError(err, ve)
 		if errorList != nil {
+			log.Println("Failed to validate user requests")
+
 			response.WithErrors(ctx, 422, "Failed to validate user requests", errorList)
 			return
 		}
+
+		log.Println("Failed to bind requests")
 
 		response.MessageOnly(ctx, 422, "Failed to bind requests")
 		return
