@@ -14,6 +14,27 @@ import (
 	"strings"
 )
 
+func generateAccountNumberType(db *gorm.DB) error {
+	var accountTypes []*entity.AccountNumberType
+
+	accountTypes = append(accountTypes,
+		&entity.AccountNumberType{
+			ID:   uuid.New(),
+			Name: "Gopay",
+		},
+		&entity.AccountNumberType{
+			ID:   uuid.New(),
+			Name: "Shopeepay",
+		},
+	)
+
+	if err := db.CreateInBatches(accountTypes, 2).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func generateUser(db *gorm.DB) error {
 	var users []*entity.User
 	var fullName string
@@ -31,6 +52,13 @@ func generateUser(db *gorm.DB) error {
 			return err
 		}
 
+		providerCode := []string{"812", "857", "859"}
+
+		var accountType *entity.AccountNumberType
+		if err = db.Order("RAND()").Limit(1).First(&accountType).Error; err != nil {
+			return err
+		}
+
 		user := &entity.User{
 			ID:              uuid.New(),
 			Name:            fullName,
@@ -40,6 +68,8 @@ func generateUser(db *gorm.DB) error {
 			Latitude:        location[i].Latitude,
 			Longitude:       location[i].Longitude,
 			StatusAccount:   "active",
+			AccountNumber:   fmt.Sprintf("62%s%s", providerCode[randRange(0, len(providerCode)-1)], strconv.Itoa(randRange(11111111, 99999999))),
+			AccountNumberID: accountType.ID,
 			UrlPhotoProfile: fmt.Sprintf("https://randomuser.me/api/portraits/men/%d.jpg", randRange(0, 99)),
 		}
 
@@ -66,36 +96,36 @@ func generateCategory(db *gorm.DB) error {
 			Name: "Pakaian dan Aksesoris",
 			Url:  "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Pakaian%20dan%20Aksesoris-bujd1dny936mccqqtsg5bgdbkjrd5p.png",
 		},
-		//&entity.Category{
-		//	ID:          uuid.New(),
-		//	Name:        "Perabotan dan Dekorasi Kamar",
-		//	Url: "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Perabotan%20dan%20Dekorasi%20Kamar-1mxhxw7rr7zj5zwaxl7uv3srfsa5lb.png",
-		//},
-		//&entity.Category{
-		//	ID:          uuid.New(),
-		//	Name:        "Kendaraan",
-		//	Url: "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Kendaraan-0m31a5v9glcmxp5mmcyrzoj2kmg7dk.png",
-		//},
-		//&entity.Category{
-		//	ID:          uuid.New(),
-		//	Name:        "Alat Tulis dan Perlengkapan kantor",
-		//	Url: "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Alat%20Tulis%20dan%20Perlengkapan%20Kantor-6mqpkyophszmho2vgs3fd3i8y6ydw1.png",
-		//},
-		//&entity.Category{
-		//	ID:          uuid.New(),
-		//	Name:        "Perlengkapan Kuliah",
-		//	Url: "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Perlengkapan%20Kuliah-t3d7leouhijnr5ya6076iv5d848uaz.png",
-		//},
-		//&entity.Category{
-		//	ID:          uuid.New(),
-		//	Name:        "Kesehatan dan Kecantikan",
-		//	Url: "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/kesehatan%20dan%20Kecantikan-izqrjov5jfw7aoa2hug8stgnpbuon5.png",
-		//},
-		//&entity.Category{
-		//	ID:          uuid.New(),
-		//	Name:        "Buku dan Bahan Ajar",
-		//	Url: "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Buku%20dan%20Bahan%20Ajar-ich0womggrlxuskvowtvd7kpsf0c0p.png",
-		//},
+		&entity.Category{
+			ID:   uuid.New(),
+			Name: "Perabotan dan Dekorasi Kamar",
+			Url:  "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Perabotan%20dan%20Dekorasi%20Kamar-1mxhxw7rr7zj5zwaxl7uv3srfsa5lb.png",
+		},
+		&entity.Category{
+			ID:   uuid.New(),
+			Name: "Kendaraan",
+			Url:  "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Kendaraan-0m31a5v9glcmxp5mmcyrzoj2kmg7dk.png",
+		},
+		&entity.Category{
+			ID:   uuid.New(),
+			Name: "Alat Tulis dan Perlengkapan kantor",
+			Url:  "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Alat%20Tulis%20dan%20Perlengkapan%20Kantor-6mqpkyophszmho2vgs3fd3i8y6ydw1.png",
+		},
+		&entity.Category{
+			ID:   uuid.New(),
+			Name: "Perlengkapan Kuliah",
+			Url:  "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Perlengkapan%20Kuliah-t3d7leouhijnr5ya6076iv5d848uaz.png",
+		},
+		&entity.Category{
+			ID:   uuid.New(),
+			Name: "Kesehatan dan Kecantikan",
+			Url:  "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/kesehatan%20dan%20Kecantikan-izqrjov5jfw7aoa2hug8stgnpbuon5.png",
+		},
+		&entity.Category{
+			ID:   uuid.New(),
+			Name: "Buku dan Bahan Ajar",
+			Url:  "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Buku%20dan%20Bahan%20Ajar-ich0womggrlxuskvowtvd7kpsf0c0p.png",
+		},
 	)
 
 	if err := db.CreateInBatches(categories, 8).Error; err != nil {
@@ -164,6 +194,19 @@ func generateProduct(db *gorm.DB) error {
 }
 
 func SeedData(db *gorm.DB) {
+	var totalAccountType int64
+
+	if err := db.Model(&entity.AccountNumberType{}).Count(&totalAccountType).Error; err != nil {
+		log.Fatalf("Error while counting account number type: %v", err)
+	}
+
+	if totalAccountType == 0 {
+		if err := generateAccountNumberType(db); err != nil {
+			log.Fatalf("Error while generating account number type: %v", err)
+
+		}
+	}
+
 	var totalUser int64
 	if err := db.Model(&entity.User{}).Count(&totalUser).Error; err != nil {
 		log.Fatalf("Error while counting user: %v", err)

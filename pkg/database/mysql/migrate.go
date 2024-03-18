@@ -8,15 +8,14 @@ import (
 
 func Migrate(db *gorm.DB) {
 	if err := db.AutoMigrate(
+		&entity.AccountNumberType{},
 		&entity.User{},
-		&entity.Wallet{},
 		&entity.OtpCode{},
-		&entity.RefreshToken{},
+		&entity.Session{},
 		&entity.ResetToken{},
 		&entity.Category{},
 		&entity.Product{},
 		&entity.Media{},
-		&entity.Admin{},
 		&entity.Transaction{},
 	); err != nil {
 		log.Fatal(err)
