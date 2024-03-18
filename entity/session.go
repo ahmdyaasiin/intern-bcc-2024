@@ -8,4 +8,5 @@ type Session struct {
 	Token     string    `gorm:"type:varchar(255);not null;unique"`
 	CreatedAt int64     `gorm:"autoCreateTime:milli;not null"`
 	UpdatedAt int64     `gorm:"autoCreateTime:milli;autoUpdateTime:milli;not null"`
+	ExpiredAt int64     `gorm:"not null"`
 }
