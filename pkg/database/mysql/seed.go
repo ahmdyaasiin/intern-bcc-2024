@@ -17,7 +17,18 @@ import (
 func generateAccountNumberType(db *gorm.DB) error {
 	var accountTypes []*entity.AccountNumberType
 
+	accountNumber, err := uuid.Parse("00000000-0000-0000-0000-000000000000")
+	if err != nil {
+		log.Println(err)
+
+		return err
+	}
+
 	accountTypes = append(accountTypes,
+		&entity.AccountNumberType{
+			ID:   accountNumber,
+			Name: "Default",
+		},
 		&entity.AccountNumberType{
 			ID:   uuid.New(),
 			Name: "Gopay",
@@ -59,6 +70,12 @@ func generateUser(db *gorm.DB) error {
 			return err
 		}
 
+		// default account number and accountType after register
+		accountNumber := "0"
+		if accountType.Name != "Default" {
+			accountNumber = fmt.Sprintf("62%s%s", providerCode[randRange(0, len(providerCode)-1)], strconv.Itoa(randRange(11111111, 99999999)))
+		}
+
 		user := &entity.User{
 			ID:              uuid.New(),
 			Name:            fullName,
@@ -68,7 +85,7 @@ func generateUser(db *gorm.DB) error {
 			Latitude:        location[i].Latitude,
 			Longitude:       location[i].Longitude,
 			StatusAccount:   "active",
-			AccountNumber:   fmt.Sprintf("62%s%s", providerCode[randRange(0, len(providerCode)-1)], strconv.Itoa(randRange(11111111, 99999999))),
+			AccountNumber:   accountNumber,
 			AccountNumberID: accountType.ID,
 			UrlPhotoProfile: fmt.Sprintf("https://randomuser.me/api/portraits/men/%d.jpg", randRange(0, 99)),
 		}
