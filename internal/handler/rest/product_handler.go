@@ -47,7 +47,7 @@ func (r *Rest) SearchProducts(ctx *gin.Context) {
 	response.WithData(ctx, 200, "Success get the searched products", products)
 }
 
-func (r *Rest) GetProduct(ctx *gin.Context) {
+func (r *Rest) DetailProduct(ctx *gin.Context) {
 	idParam := ctx.Param("id")
 	id, err := uuid.Parse(idParam)
 	if err != nil {
@@ -63,4 +63,20 @@ func (r *Rest) GetProduct(ctx *gin.Context) {
 	}
 
 	response.WithData(ctx, 200, "Success get product", product)
+}
+
+func (r *Rest) DetailProductOwner(ctx *gin.Context) {
+
+}
+
+func (r *Rest) UpdateProduct(ctx *gin.Context) {
+
+}
+
+func (r *Rest) DeleteProduct(ctx *gin.Context) {
+
+}
+
+func (r *Rest) AllMyProduct(ctx *gin.Context) {
+	
 }

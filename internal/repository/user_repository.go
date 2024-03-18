@@ -8,9 +8,9 @@ import (
 )
 
 type IUserRepository interface {
-	Find(param model.ParamForFind) (entity.User, response.Details)
-	Create(user *entity.User) response.Details
-	Update(user *entity.User) response.Details
+	Find(tx *gorm.DB, user *entity.User, param model.ParamForFind) response.Details
+	Create(tx *gorm.DB, user *entity.User) response.Details
+	Update(tx *gorm.DB, user *entity.User) response.Details
 	Delete(user *entity.User) response.Details
 	Verify(user entity.User, otp entity.OtpCode) response.Details
 	Change(user entity.User, token entity.ResetToken) response.Details
@@ -24,25 +24,24 @@ func NewUserRepository(db *gorm.DB) IUserRepository {
 	return &UserRepository{db}
 }
 
-func (ur *UserRepository) Find(param model.ParamForFind) (entity.User, response.Details) {
-	user := entity.User{}
-	if err := ur.db.Debug().Where(&param).First(&user).Error; err != nil {
-		return user, response.Details{Code: 500, Message: "Failed to find user", Error: err}
+func (ur *UserRepository) Find(tx *gorm.DB, user *entity.User, param model.ParamForFind) response.Details {
+	if err := tx.Debug().Where(&param).First(user).Error; err != nil {
+		return response.Details{Code: 500, Message: "Failed to find user", Error: err}
 	}
 
-	return user, response.Details{Code: 200, Message: "Success to find user", Error: nil}
+	return response.Details{Code: 200, Message: "Success to find user", Error: nil}
 }
 
-func (ur *UserRepository) Create(user *entity.User) response.Details {
-	if err := ur.db.Debug().Create(user).Error; err != nil {
+func (ur *UserRepository) Create(tx *gorm.DB, user *entity.User) response.Details {
+	if err := tx.Debug().Create(user).Error; err != nil {
 		return response.Details{Code: 500, Message: "Failed to create user", Error: err}
 	}
 
 	return response.Details{Code: 200, Message: "Success to create user", Error: nil}
 }
 
-func (ur *UserRepository) Update(user *entity.User) response.Details {
-	if err := ur.db.Debug().Updates(user).Error; err != nil {
+func (ur *UserRepository) Update(tx *gorm.DB, user *entity.User) response.Details {
+	if err := tx.Debug().Updates(user).Error; err != nil {
 		return response.Details{Code: 500, Message: "Failed to update user", Error: err}
 	}
 

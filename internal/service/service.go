@@ -27,7 +27,7 @@ func NewService(param InitParam) *Service {
 	otpService := NewOtpService(param.Repository.OtpRepository, param.Repository.UserRepository)
 	sessionService := NewSessionService(param.Repository.SessionRepository, param.JwtAuth)
 	tokenService := NewTokenService(param.Repository.TokenRepository, param.Repository.UserRepository)
-	productService := NewProductService(param.Repository.ProductRepository, param.Repository.MediaRepository, param.Repository.UserRepository, param.JwtAuth)
+	productService := NewProductService(param.Repository.CategoryRepository, param.Repository.ProductRepository, param.Repository.MediaRepository, param.Repository.UserRepository, param.JwtAuth)
 	categoryService := NewCategoryService(param.Repository.CategoryRepository)
 	transactionService := NewTransactionService(param.Repository.ProductRepository, param.Repository.TransactionRepository, param.JwtAuth)
 

@@ -30,24 +30,37 @@ func (r *Rest) MountEndpoint() {
 	routerGroup := r.router.Group("/api/v1")
 	routerGroup.GET("/status", CheckStatus)
 
+	// AUTH ROUTE
 	auth := routerGroup.Group("/auth")
-	auth.POST("/register", r.RegisterAccount)
-	auth.PATCH("/register/verify", r.VerifyAccount)
+	auth.POST("/register", r.Register)
+	auth.PATCH("/register", r.VerifyAfterRegister)
 	auth.PATCH("/register/resend", r.ResendOtp)
 	auth.POST("/reset", r.ResetPassword)
-	auth.GET("/reset/:token", r.CheckToken)
-	auth.PATCH("/reset/:token", r.ChangePassword)
-	auth.POST("/login", r.LoginAccount)
+	auth.GET("/reset/:token", r.CheckResetToken)
+	auth.PATCH("/reset/:token", r.ChangePasswordFromReset)
+	auth.POST("/login", r.Login)
 	auth.POST("/renew-access-token", r.RenewSession)
-	auth.DELETE("/logout", r.middleware.AuthenticateUser, r.LogoutAccount)
-	auth.GET("/my-data", r.middleware.AuthenticateUser, r.MyData)
+	auth.DELETE("/logout", r.middleware.Authentication, r.Logout)
+	auth.GET("/my-data", r.middleware.Authentication, r.MyData)
 
-	//////
+	// PRODUCT ROUTE
 	product := routerGroup.Group("/product")
-	product.GET("/", r.HomePage)
-	product.GET("/:id", r.middleware.AuthenticateUser, r.GetProduct)
-	product.POST("/:id/buy", r.middleware.AuthenticateUser, r.BuyProduct)
-	product.GET("/search", r.middleware.AuthenticateUser, r.SearchProducts)
+	product.GET("/homepage", r.HomePage)
+	product.GET("/search", r.middleware.Authentication, r.SearchProducts)
+	product.GET("/detail/:id", r.middleware.Authentication, r.DetailProduct)
+	product.GET("/:id", r.middleware.Authorization, r.DetailProductOwner) // add middleware authorization
+	product.POST("/:id", r.middleware.Authorization, r.BuyProduct)        // add middleware authorization
+	product.PATCH("/:id", r.middleware.Authorization, r.UpdateProduct)    // add middleware authorization
+	product.DELETE("/:id", r.middleware.Authorization, r.DeleteProduct)   // add middleware authorization
+	product.POST("/:id/callback", r.CheckPayment)
+
+	// TRANSACTION ROUTE
+	transaction := routerGroup.Group("/transaction")
+	transaction.GET("/buy-list", r.middleware.Authentication, r.AllMyTransaction)                // add middleware authentication
+	transaction.GET("/sell-list", r.middleware.Authentication, r.AllMyProduct)                   // add middleware authentication
+	transaction.DELETE("/:id", r.middleware.Authorization, r.CancelTransaction)                  // add middleware authentication and middleware authorization
+	transaction.PATCH("/:id/cash-on-delivery", r.middleware.Authorization, r.RefuseTransaction)  // add middleware authentication and middleware authorization
+	transaction.DELETE("/:id/cash-on-delivery", r.middleware.Authorization, r.AcceptTransaction) // add middleware authentication and middleware authorization
 
 }
 

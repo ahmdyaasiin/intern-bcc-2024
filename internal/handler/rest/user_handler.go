@@ -7,18 +7,23 @@ import (
 	"intern-bcc-2024/model"
 	"intern-bcc-2024/pkg/response"
 	"intern-bcc-2024/pkg/validation"
+	"log"
 	"strings"
 )
 
-func (r *Rest) RegisterAccount(ctx *gin.Context) {
+func (r *Rest) Register(ctx *gin.Context) {
 	var requests model.RequestForRegister
 	if err := ctx.ShouldBindJSON(&requests); err != nil {
 		var ve validator.ValidationErrors
 		errorList := validation.GetError(err, ve)
 		if errorList != nil {
+			log.Println("Failed to validate user requests")
+
 			response.WithErrors(ctx, 422, "Failed to validate user requests", errorList)
 			return
 		}
+
+		log.Println("Failed to bind requests")
 
 		response.MessageOnly(ctx, 422, "Failed to bind requests")
 		return
@@ -34,7 +39,7 @@ func (r *Rest) RegisterAccount(ctx *gin.Context) {
 
 }
 
-func (r *Rest) VerifyAccount(ctx *gin.Context) {
+func (r *Rest) VerifyAfterRegister(ctx *gin.Context) {
 	var requests model.RequestForVerify
 	if err := ctx.ShouldBindJSON(&requests); err != nil {
 		var ve validator.ValidationErrors
@@ -57,7 +62,7 @@ func (r *Rest) VerifyAccount(ctx *gin.Context) {
 	response.MessageOnly(ctx, 200, "User has been successfully verified")
 }
 
-func (r *Rest) ChangePassword(ctx *gin.Context) {
+func (r *Rest) ChangePasswordFromReset(ctx *gin.Context) {
 	var requests model.RequestForChangePassword
 	if err := ctx.ShouldBindJSON(&requests); err != nil {
 		var ve validator.ValidationErrors
@@ -81,7 +86,7 @@ func (r *Rest) ChangePassword(ctx *gin.Context) {
 	response.MessageOnly(ctx, 200, "Success change password")
 }
 
-func (r *Rest) LoginAccount(ctx *gin.Context) {
+func (r *Rest) Login(ctx *gin.Context) {
 	var requests model.RequestForLogin
 	if err := ctx.ShouldBindJSON(&requests); err != nil {
 		var ve validator.ValidationErrors

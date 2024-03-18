@@ -8,8 +8,8 @@ import (
 	"intern-bcc-2024/pkg/validation"
 )
 
-func (r *Rest) ResetPassword(ctx *gin.Context) {
-	var requests model.RequestForReset
+func (r *Rest) RenewSession(ctx *gin.Context) {
+	var requests model.RequestForRenewAccessToken
 	if err := ctx.ShouldBindJSON(&requests); err != nil {
 		var ve validator.ValidationErrors
 		errorList := validation.GetError(err, ve)
@@ -22,22 +22,21 @@ func (r *Rest) ResetPassword(ctx *gin.Context) {
 		return
 	}
 
-	respDetails := r.service.TokenService.ResetPassword(requests)
+	token, respDetails := r.service.SessionService.Renew(requests)
 	if respDetails.Error != nil {
 		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
 		return
 	}
 
-	response.MessageOnly(ctx, 200, "Successfully sent the password reset link")
+	response.WithData(ctx, 200, "Successfully updated access token", token)
 }
 
-func (r *Rest) CheckToken(ctx *gin.Context) {
-	token := ctx.Param("token")
-	if respDetails := r.service.TokenService.CheckToken(token); respDetails.Error != nil {
-
+func (r *Rest) Logout(ctx *gin.Context) {
+	respDetails := r.service.SessionService.Logout(ctx)
+	if respDetails.Error != nil {
 		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
 		return
 	}
 
-	response.MessageOnly(ctx, 200, "Token is valid")
+	response.MessageOnly(ctx, 200, "User logout successfully")
 }
