@@ -7,7 +7,7 @@ import (
 )
 
 type Interface interface {
-	AuthenticateUser(ctx *gin.Context)
+	Auth(ctx *gin.Context)
 	Cors() gin.HandlerFunc
 	Timeout() gin.HandlerFunc
 }

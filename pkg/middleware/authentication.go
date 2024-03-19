@@ -8,7 +8,7 @@ import (
 	"intern-bcc-2024/pkg/response"
 )
 
-func (m *middleware) AuthenticateUser(ctx *gin.Context) {
+func (m *middleware) Auth(ctx *gin.Context) {
 	bearer := ctx.GetHeader("Authorization")
 	if bearer == "" {
 		response.MessageOnly(ctx, 401, "Authorization header is missing. Please provide valid authentication credentials")
@@ -46,7 +46,6 @@ func (m *middleware) AuthenticateUser(ctx *gin.Context) {
 		return
 	}
 
-	ctx.Set("user", user)
-
+	ctx.Set("user", *user)
 	ctx.Next()
 }
