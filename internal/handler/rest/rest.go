@@ -40,27 +40,33 @@ func (r *Rest) MountEndpoint() {
 	auth.PATCH("/reset/:token", r.ChangePasswordFromReset)
 	auth.POST("/login", r.Login)
 	auth.POST("/renew-access-token", r.RenewSession)
-	auth.DELETE("/logout", r.middleware.Authentication, r.Logout)
-	auth.GET("/my-data", r.middleware.Authentication, r.MyData)
+	auth.DELETE("/logout", r.middleware.Auth, r.Logout)
+	auth.GET("/my-data", r.middleware.Auth, r.MyData)
+
+	// PROFILE ROUTE
+	profile := routerGroup.Group("/profile")
+	profile.GET("/account_number")   // later
+	profile.PATCH("/account_number") // later
 
 	// PRODUCT ROUTE
 	product := routerGroup.Group("/product")
 	product.GET("/homepage", r.HomePage)
-	product.GET("/search", r.middleware.Authentication, r.SearchProducts)
-	product.GET("/detail/:id", r.middleware.Authentication, r.DetailProduct)
-	product.GET("/:id", r.middleware.Authorization, r.DetailProductOwner) // add middleware authorization
-	product.POST("/:id", r.middleware.Authorization, r.BuyProduct)        // add middleware authorization
-	product.PATCH("/:id", r.middleware.Authorization, r.UpdateProduct)    // add middleware authorization
-	product.DELETE("/:id", r.middleware.Authorization, r.DeleteProduct)   // add middleware authorization
-	product.POST("/:id/callback", r.CheckPayment)
+	product.GET("/search", r.middleware.Auth, r.SearchProducts)
+	product.GET("/detail/:id", r.middleware.Auth, r.DetailProduct)
+	product.POST("", r.middleware.Auth, r.AddProduct)            // later
+	product.GET("/:id", r.middleware.Auth, r.DetailProductOwner) // later
+	product.POST("/:id", r.middleware.Auth, r.BuyProduct)
+	product.PATCH("/:id", r.middleware.Auth, r.UpdateProduct)  // later
+	product.DELETE("/:id", r.middleware.Auth, r.DeleteProduct) // later
+	product.POST("/payment/callback", r.CheckPayment)
 
 	// TRANSACTION ROUTE
 	transaction := routerGroup.Group("/transaction")
-	transaction.GET("/buy-list", r.middleware.Authentication, r.AllMyTransaction)                // add middleware authentication
-	transaction.GET("/sell-list", r.middleware.Authentication, r.AllMyProduct)                   // add middleware authentication
-	transaction.DELETE("/:id", r.middleware.Authorization, r.CancelTransaction)                  // add middleware authentication and middleware authorization
-	transaction.PATCH("/:id/cash-on-delivery", r.middleware.Authorization, r.RefuseTransaction)  // add middleware authentication and middleware authorization
-	transaction.DELETE("/:id/cash-on-delivery", r.middleware.Authorization, r.AcceptTransaction) // add middleware authentication and middleware authorization
+	transaction.GET("/buy-list", r.middleware.Auth, r.AllMyTransaction)
+	transaction.GET("/sell-list", r.middleware.Auth, r.AllMyProduct)
+	transaction.DELETE("/:id", r.middleware.Auth, r.CancelTransaction)
+	transaction.PATCH("/:id/cash-on-delivery", r.middleware.Auth, r.RefuseTransaction)  // need withdrawal code
+	transaction.DELETE("/:id/cash-on-delivery", r.middleware.Auth, r.AcceptTransaction) // need cancel code
 
 }
 
