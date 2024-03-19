@@ -210,6 +210,47 @@ func generateProduct(db *gorm.DB) error {
 	return nil
 }
 
+func generateTransaction(db *gorm.DB) error {
+	var transactions []*entity.Transaction
+
+	var categories []*entity.Category
+	if err := db.Find(&categories).Error; err != nil {
+		return err
+	}
+
+	for _, category := range categories {
+		var products []*entity.Product
+		if err := db.Order("RAND()").Limit(3).Where("category_id = ?", category.ID).Find(&products).Error; err != nil {
+			return err
+		}
+
+		var users []*entity.User
+		if err := db.Order("RAND()").Limit(3).Find(&users).Error; err != nil {
+			return err
+		}
+
+		for i := 0; i < 3; i++ {
+			transactions = append(transactions,
+				&entity.Transaction{
+					ID:             uuid.New(),
+					UserID:         users[i].ID,
+					ProductID:      products[i].ID,
+					MidtransID:     uuid.New(),
+					Amount:         products[i].Price,
+					Status:         "success",
+					WithdrawalCode: mail.GenerateSixCode(),
+				},
+			)
+		}
+	}
+
+	if err := db.CreateInBatches(transactions, len(transactions)).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func SeedData(db *gorm.DB) {
 	var totalAccountType int64
 
@@ -260,6 +301,17 @@ func SeedData(db *gorm.DB) {
 		}
 	}
 
+	var totalTransaction int64
+	if err := db.Model(&entity.Transaction{}).Count(&totalTransaction).Error; err != nil {
+		log.Fatalf("Error while counting transaction: %v", err)
+	}
+
+	if totalTransaction == 0 {
+		if err := generateTransaction(db); err != nil {
+			log.Fatalf("Error while generating transaction: %v", err)
+
+		}
+	}
 }
 
 func randRange(min, max int) int {
