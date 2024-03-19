@@ -4,5 +4,5 @@
 # Configuration file
 .env
 
-# JetBrains file
+# JetBrains folder
 .idea/
