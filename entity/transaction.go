@@ -8,7 +8,7 @@ type Transaction struct {
 	ProductID      uuid.UUID `json:"product_id" gorm:"type:varchar(36);not null"`
 	MidtransID     uuid.UUID `gorm:""`
 	Amount         uint64    `json:"amount" gorm:"not null"`
-	Status         string    `json:"status" gorm:"type:enum('failed', 'on progress', 'success')"`
+	Status         string    `json:"status" gorm:"type:enum('pending', 'success')"`
 	WithdrawalCode string    `json:""`
 	CreatedAt      int64     `json:"-" gorm:"autoCreateTime:milli;not null"`
 	UpdatedAt      int64     `json:"-" gorm:"autoCreateTime:milli;autoUpdateTime:milli;not null"`
