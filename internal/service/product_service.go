@@ -18,6 +18,9 @@ import (
 type IProductService interface {
 	SearchProducts(requests model.RequestForSearch) (*model.ResponseSearch, response.Details)
 	GetProduct(id uuid.UUID, ctx *gin.Context) (*model.ResponseForGetProductByID, response.Details)
+	GetProductOwner(id uuid.UUID) (*model.ResponseForGetProductByIDOwner, response.Details)
+	Find(requests model.ParamForFind) (*entity.Product, response.Details)
+	ActiveProducts(ctx *gin.Context) (*[]model.ResponseForActiveProducts, response.Details)
 }
 
 type ProductService struct {
@@ -120,4 +123,90 @@ func (ps *ProductService) GetProduct(id uuid.UUID, ctx *gin.Context) (*model.Res
 
 	product.Media = m
 	return product, response.Details{Code: 200, Message: "Success get product details", Error: nil}
+}
+
+func (ps *ProductService) GetProductOwner(id uuid.UUID) (*model.ResponseForGetProductByIDOwner, response.Details) {
+	res := new(model.ResponseForGetProductByIDOwner)
+	product := new(entity.Product)
+	medias := new([]entity.Media)
+
+	tx := ps.db.Begin()
+	defer tx.Rollback()
+
+	respDetails := ps.pr.FindProductOwner(tx, product, model.ParamForFind{
+		ID: id,
+	})
+	if respDetails.Error != nil {
+		log.Println(respDetails.Error)
+
+		return res, respDetails
+	}
+
+	respDetails = ps.mr.GetMedia(tx, medias, id)
+	if respDetails.Error != nil {
+		log.Println(respDetails.Error)
+
+		return res, respDetails
+	}
+
+	m := make([]string, len(*medias))
+	for i, media := range *medias {
+		m[i] = media.Url
+	}
+
+	res = &model.ResponseForGetProductByIDOwner{
+		ProductID:          product.ID,
+		ProductName:        product.Name,
+		ProductDescription: product.Description,
+		ProductPrice:       product.Price,
+	}
+	res.Media = m
+	return res, response.Details{Code: 200, Message: "Success get product details", Error: nil}
+}
+
+func (ps *ProductService) Find(requests model.ParamForFind) (*entity.Product, response.Details) {
+	product := new(entity.Product)
+
+	tx := ps.db.Begin()
+	defer tx.Rollback()
+
+	respDetails := ps.pr.Find(tx, product, requests)
+	if respDetails.Error != nil {
+		return product, respDetails
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		return product, response.Details{Code: 500, Message: "Failed to commit transaction", Error: err}
+	}
+
+	return product, response.Details{Code: 200, Message: "Success get product", Error: nil}
+}
+
+func (ps *ProductService) ActiveProducts(ctx *gin.Context) (*[]model.ResponseForActiveProducts, response.Details) {
+	product := new([]model.ResponseForActiveProducts)
+
+	tx := ps.db.Begin()
+	defer tx.Rollback()
+
+	user, err := ps.jwtAuth.GetLoginUser(ctx)
+	if err != nil {
+		log.Println(err)
+
+		return product, response.Details{Code: 500, Message: "Failed to get login user", Error: err}
+	}
+
+	respDetails := ps.pr.FindActiveProduct(tx, product, user)
+	if respDetails.Error != nil {
+		log.Println(respDetails.Error)
+
+		return product, respDetails
+	}
+
+	if err = tx.Commit().Error; err != nil {
+		log.Println(err)
+
+		return product, response.Details{Code: 500, Message: "Failed to commit transaction", Error: err}
+	}
+
+	return product, response.Details{Code: 200, Message: "Success get all active products", Error: nil}
 }

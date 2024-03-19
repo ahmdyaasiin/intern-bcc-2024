@@ -71,16 +71,23 @@ func (us *UserService) Register(requests model.RequestForRegister) (*model.Respo
 		return res, response.Details{Code: 500, Message: "Failed to generate password", Error: err}
 	}
 
+	accountNumber, err := uuid.Parse("00000000-0000-0000-0000-000000000000")
+	if err != nil {
+		log.Println(err)
+
+		return res, response.Details{Code: 500, Message: "Failed to parse account number"}
+	}
+
 	user = &entity.User{
-		ID:        uuid.New(),
-		Name:      requests.Name,
-		Email:     requests.Email,
-		Password:  hashPassword,
-		Address:   requests.Address,
-		Latitude:  requests.Latitude,
-		Longitude: requests.Longitude,
-		// AccountNumber: "", --> null
-		// AccountNumberID: "", --> null
+		ID:              uuid.New(),
+		Name:            requests.Name,
+		Email:           requests.Email,
+		Password:        hashPassword,
+		Address:         requests.Address,
+		Latitude:        requests.Latitude,
+		Longitude:       requests.Longitude,
+		AccountNumber:   "0",
+		AccountNumberID: accountNumber,
 		StatusAccount:   "inactive",
 		UrlPhotoProfile: "default.jpg",
 	}
@@ -339,6 +346,10 @@ func (us *UserService) Find(requests model.ParamForFind) (*entity.User, response
 	respDetails := us.ur.Find(tx, user, requests)
 	if respDetails.Error != nil {
 		return user, respDetails
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		return user, response.Details{Code: 500, Message: "Failed to commit transaction", Error: err}
 	}
 
 	return user, response.Details{Code: 200, Message: "Success get user", Error: nil}

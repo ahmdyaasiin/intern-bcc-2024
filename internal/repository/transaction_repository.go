@@ -3,11 +3,16 @@ package repository
 import (
 	"gorm.io/gorm"
 	"intern-bcc-2024/entity"
+	"intern-bcc-2024/model"
 	"intern-bcc-2024/pkg/response"
 )
 
 type ITransactionRepository interface {
 	CreateTransaction(tx *gorm.DB, transaction *entity.Transaction) response.Details
+	Find(tx *gorm.DB, transaction *entity.Transaction, param model.ParamForFind) response.Details
+	Update(tx *gorm.DB, transaction *entity.Transaction) response.Details
+	Delete(tx *gorm.DB, transaction *entity.Transaction) response.Details
+	FindActiveTransaction(tx *gorm.DB, transaction *[]model.ResponseForActiveTransactions, user entity.User) response.Details
 }
 
 type TransactionRepository struct {
@@ -24,4 +29,36 @@ func (tr *TransactionRepository) CreateTransaction(tx *gorm.DB, transaction *ent
 	}
 
 	return response.Details{Code: 200, Message: "Success to create transaction", Error: nil}
+}
+
+func (tr *TransactionRepository) Find(tx *gorm.DB, transaction *entity.Transaction, param model.ParamForFind) response.Details {
+	if err := tx.Debug().Where(&param).First(transaction).Error; err != nil {
+		return response.Details{Code: 500, Message: "Failed to find transaction", Error: err}
+	}
+
+	return response.Details{Code: 200, Message: "Success to find transaction", Error: nil}
+}
+
+func (tr *TransactionRepository) Update(tx *gorm.DB, transaction *entity.Transaction) response.Details {
+	if err := tx.Debug().Updates(transaction).Error; err != nil {
+		return response.Details{Code: 500, Message: "Failed to update transaction", Error: err}
+	}
+
+	return response.Details{Code: 200, Message: "Success to update transaction", Error: nil}
+}
+
+func (tr *TransactionRepository) Delete(tx *gorm.DB, transaction *entity.Transaction) response.Details {
+	if err := tx.Debug().Delete(transaction).Error; err != nil {
+		return response.Details{Code: 500, Message: "Failed to delete transaction", Error: err}
+	}
+
+	return response.Details{Code: 200, Message: "Success to delete transaction", Error: nil}
+}
+
+func (tr *TransactionRepository) FindActiveTransaction(tx *gorm.DB, transaction *[]model.ResponseForActiveTransactions, user entity.User) response.Details {
+	if err := tx.Debug().Raw("SELECT transactions.id AS transaction_id, products.id as product_id, products.name AS product_name, products.price AS product_price, transactions.withdrawal_code AS withdrawal_code, transactions.user_id AS owner_id, (SELECT name FROM users WHERE users.id = owner_id) AS owner_name, (SELECT url FROM media WHERE media.product_id = products.id LIMIT 1) AS url_product FROM transactions INNER JOIN products ON transactions.product_id = products.id WHERE transactions.user_id = '" + user.ID.String() + "'").Scan(transaction).Error; err != nil {
+		return response.Details{Code: 500, Message: "Failed to get active transactions"}
+	}
+
+	return response.Details{Code: 200, Message: "Success to get active transactions"}
 }

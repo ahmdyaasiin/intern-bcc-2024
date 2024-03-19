@@ -47,21 +47,105 @@ func (r *Rest) CheckPayment(ctx *gin.Context) {
 		return
 	}
 
-	response.MessageOnly(ctx, 200, "Success verify the payment")
+	response.MessageOnly(ctx, 200, respDetails.Message)
 }
 
 func (r *Rest) AllMyTransaction(ctx *gin.Context) {
+	transaction, respDetails := r.service.TransactionService.ActiveTransaction(ctx)
+	if respDetails.Error != nil {
+		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
+		return
+	}
 
+	response.WithData(ctx, 200, "Success get active transaction", transaction)
 }
 
 func (r *Rest) CancelTransaction(ctx *gin.Context) {
+	var requests model.RequestForCancelTransaction
+	if err := ctx.ShouldBindJSON(&requests); err != nil {
+		var ve validator.ValidationErrors
+		errorList := validation.GetError(err, ve)
+		if errorList != nil {
+			response.WithErrors(ctx, 422, "Failed to validate user requests", errorList)
+			return
+		}
 
+		response.MessageOnly(ctx, 422, "Failed to bind requests")
+		return
+	}
+
+	idParam := ctx.Param("id")
+	id, err := uuid.Parse(idParam)
+	if err != nil {
+		response.MessageOnly(ctx, 422, "Failed convert id")
+		return
+	}
+
+	respDetails := r.service.TransactionService.CancelTransaction(ctx, id, requests.TransactionID)
+	if respDetails.Error != nil {
+		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
+		return
+	}
+
+	response.MessageOnly(ctx, 200, "Success cancel transaction")
 }
 
 func (r *Rest) RefuseTransaction(ctx *gin.Context) {
+	var requests model.RequestForRefuseTransaction
+	if err := ctx.ShouldBindJSON(&requests); err != nil {
+		var ve validator.ValidationErrors
+		errorList := validation.GetError(err, ve)
+		if errorList != nil {
+			response.WithErrors(ctx, 422, "Failed to validate user requests", errorList)
+			return
+		}
 
+		response.MessageOnly(ctx, 422, "Failed to bind requests")
+		return
+	}
+
+	idParam := ctx.Param("id")
+	id, err := uuid.Parse(idParam)
+	if err != nil {
+		response.MessageOnly(ctx, 422, "Failed convert id")
+		return
+	}
+
+	respDetails := r.service.TransactionService.RefuseTransaction(ctx, id, requests)
+	if respDetails.Error != nil {
+		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
+		return
+	}
+
+	response.MessageOnly(ctx, 200, "Success refuse transaction")
 }
 
 func (r *Rest) AcceptTransaction(ctx *gin.Context) {
+	var requests model.RequestForWithdrawTransaction
+	if err := ctx.ShouldBindJSON(&requests); err != nil {
+		var ve validator.ValidationErrors
+		errorList := validation.GetError(err, ve)
+		if errorList != nil {
+			response.WithErrors(ctx, 422, "Failed to validate user requests", errorList)
+			return
+		}
 
+		response.MessageOnly(ctx, 422, "Failed to bind requests")
+		return
+	}
+
+	idParam := ctx.Param("id")
+	id, err := uuid.Parse(idParam)
+	if err != nil {
+		response.MessageOnly(ctx, 422, "Failed convert id")
+		return
+	}
+
+	respDetails := r.service.TransactionService.AcceptTransaction(ctx, id, requests)
+	if respDetails.Error != nil {
+		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
+		return
+	}
+
+	response.MessageOnly(ctx, 200, "Success withdraw transaction")
 }

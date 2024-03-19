@@ -65,8 +65,26 @@ func (r *Rest) DetailProduct(ctx *gin.Context) {
 	response.WithData(ctx, 200, "Success get product", product)
 }
 
-func (r *Rest) DetailProductOwner(ctx *gin.Context) {
+func (r *Rest) AddProduct(ctx *gin.Context) {
 
+}
+
+func (r *Rest) DetailProductOwner(ctx *gin.Context) {
+	idParam := ctx.Param("id")
+	id, err := uuid.Parse(idParam)
+	if err != nil {
+		response.MessageOnly(ctx, 422, "Failed convert id")
+		return
+	}
+
+	product, respDetails := r.service.ProductService.GetProductOwner(id)
+	if respDetails.Error != nil {
+
+		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
+		return
+	}
+
+	response.WithData(ctx, 200, "Success get product", product)
 }
 
 func (r *Rest) UpdateProduct(ctx *gin.Context) {
@@ -78,5 +96,12 @@ func (r *Rest) DeleteProduct(ctx *gin.Context) {
 }
 
 func (r *Rest) AllMyProduct(ctx *gin.Context) {
-	
+	products, respDetails := r.service.ProductService.ActiveProducts(ctx)
+	if respDetails.Error != nil {
+		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
+		return
+	}
+
+	response.WithData(ctx, 200, "Success get active products", products)
+
 }
