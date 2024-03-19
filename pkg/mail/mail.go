@@ -28,7 +28,7 @@ func SendEmail(to string, subject string, message string) error {
 	return nil
 }
 
-func GenerateVerificationCode() string {
+func GenerateSixCode() string {
 	minRange, maxRange := 100000, 999999
 
 	return strconv.Itoa(rand.Intn(maxRange-minRange+1) + minRange)
