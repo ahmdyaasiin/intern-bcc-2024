@@ -15,6 +15,26 @@ type ErrorMsg struct {
 	Message string `json:"message"`
 }
 
+var SecureDomain validator.Func = func(fl validator.FieldLevel) bool {
+	if email, ok := fl.Field().Interface().(string); ok {
+		domain := strings.Split(email, "@")[1]
+		if secureEmailDomain, _ := strconv.ParseBool(os.Getenv("SECURE_EMAIL_DOMAIN")); secureEmailDomain == true && domain != os.Getenv("EMAIL_DOMAIN") {
+			return false
+		}
+	}
+	return true
+}
+
+func AddValidator() {
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		err := v.RegisterValidation("secureDomain", SecureDomain)
+
+		if err != nil {
+			log.Fatal("Error add custom validator")
+		}
+	}
+}
+
 func GetField(fe validator.FieldError) string {
 	var builder strings.Builder
 
@@ -48,9 +68,9 @@ func GetErrorMsg(fe validator.FieldError) string {
 	case "eqfield":
 		return "Password and confirm password doesn't match"
 	case "min":
-		return "Should be greater than " + fe.Param()
+		return "The " + fe.Field() + " should be greater than " + fe.Param()
 	case "max":
-		return "Should be less than " + fe.Param()
+		return "The " + fe.Field() + " should be less than " + fe.Param()
 	case "secureDomain":
 		return "The domain of email should be " + os.Getenv("EMAIL_DOMAIN")
 	case "email":
@@ -58,24 +78,4 @@ func GetErrorMsg(fe validator.FieldError) string {
 	}
 
 	return fe.Tag()
-}
-
-func AddValidator() {
-	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
-		err := v.RegisterValidation("secureDomain", SecureDomain)
-
-		if err != nil {
-			log.Fatal("Error add custom validator")
-		}
-	}
-}
-
-var SecureDomain validator.Func = func(fl validator.FieldLevel) bool {
-	if email, ok := fl.Field().Interface().(string); ok {
-		domain := strings.Split(email, "@")[1]
-		if secureEmailDomain, _ := strconv.ParseBool(os.Getenv("SECURE_EMAIL_DOMAIN")); secureEmailDomain == true && domain != os.Getenv("EMAIL_DOMAIN") {
-			return false
-		}
-	}
-	return true
 }
