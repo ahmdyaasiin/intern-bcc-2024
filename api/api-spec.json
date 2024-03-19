@@ -3,7 +3,7 @@
   "info": {
     "title": "Bekas.an - Open API",
     "description": "Description of the API",
-    "version": "1.0.1"
+    "version": "1.2.1"
   },
   "servers": [
     {
@@ -182,9 +182,7 @@
             }
           }
         }
-      }
-    },
-    "/auth/register/verify": {
+      },
       "patch": {
         "description": "",
         "tags": [
@@ -427,175 +425,175 @@
       }
     },
     "/auth/login": {
-     "post": {
-       "description": "",
-       "tags": [
-         "User Authentication"
-       ],
-       "requestBody": {
-         "required": true,
-         "description": "",
-         "content": {
-           "application/json": {
-             "example": {
-               "email": "johndoe@example.com",
-               "password": "password_john_doe"
-             },
-             "schema": {
-               "type": "object",
-               "properties": {
-                 "email": {
-                   "type": "string",
-                   "format": "email"
-                 },
-                 "password": {
-                   "type": "string",
-                   "minLength": 8,
-                   "maxLength": 64
-                 }
-               },
-               "required": [
-                 "email", "password"
-               ]
-             }
-           }
-         }
-       },
-       "responses": {
-         "200": {
-           "description": "",
-           "content": {
-             "application/json": {
-               "example": {
-                 "message": "User berhasil masuk",
-                 "data": {
-                   "access_token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyOWUwMTcxOC1kYzhiLTExZWUtODkyNC0zMjUwOTZiMzlmNDciLCJuYW1lIjoiSm9obiBEb2UiLCJleHBpcmVkX2F0IjoiMTcwOTgzNTk3OCJ9.NH56MkP0aJeYyRqPbOqo-VuMBFq_ADkAEuwPqUxY0Z4",
-                   "refresh_token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyOWUwMTcxOC1kYzhiLTExZWUtODkyNC0zMjUwOTZiMzlmNDciLCJuYW1lIjoiSm9obiBEb2UiLCJleHBpcmVkX2F0IjoiMTcwOTgzNjAxMSJ9.GM2fIW0Pcw4aAbjxN3kCap50l0YmA7DiWS-SySLfj7c"
-                 }
-               },
-               "schema": {
-                 "type": "object",
-                 "properties": {
-                   "message": {
-                     "type": "string"
-                   },
-                   "data": {
-                     "type": "object",
-                     "properties": {
-                       "access_token": {
-                         "type": "string"
-                       },
-                       "refresh_token": {
-                         "type": "string"
-                       }
-                     }
-                   }
-                 }
-               }
-             }
-           }
-         },
-         "401": {
-           "description": "",
-           "content": {
-             "application/json": {
-               "example": {
-                 "message": "Email atau password tidak benar"
-               },
-               "schema": {
-                 "type": "object",
-                 "properties": {
-                   "message": {
-                     "type": "string"
-                   }
-                 }
-               }
-             }
-           }
-         },
-         "403": {
-           "description": "",
-           "content": {
-             "application/json": {
-               "examples": {
-                 "Unverified": {
-                   "value": {
-                     "message" : "Tolong verifikasi akun anda terlebih dahulu",
-                     "data": {
-                       "id": "29e01718-dc8b-11ee-8924-325096b39f47"
-                     }
-                   }
-                 },
-                 "Blocked": {
-                   "value": {
-                     "message": "User diblokir"
-                   }
-                 }
-               },
-               "schema": {
-                 "type": "object",
-                 "properties": {
-                   "message": {
-                     "type": "string"
-                   }
-                 }
-               }
-             }
-           }
-         },
-         "422": {
-           "description": "",
-           "content": {
-             "application/json": {
-               "example": {
-                 "message": "Kesalahan validasi",
-                 "errors": {
-                   "email": "Email tidak boleh kosong",
-                   "password": "Password tidak boleh kosong"
-                 }
-               },
-               "schema": {
-                 "type": "object",
-                 "properties": {
-                   "message": {
-                     "type": "string"
-                   },
-                   "errors": {
-                     "type": "object",
-                     "properties": {
-                       "email": {
-                         "type": "string"
-                       },
-                       "password": {
-                         "type": "string"
-                       }
-                     }
-                   }
-                 }
-               }
-             }
-           }
-         },
-         "500": {
-           "description": "",
-           "content": {
-             "application/json": {
-               "example": {
-                 "message": "Terjadi kesalahan yang tidak terduga"
-               },
-               "schema": {
-                 "type": "object",
-                 "properties": {
-                   "message": {
-                     "type": "string"
-                   }
-                 }
-               }
-             }
-           }
-         }
-       }
-     }
+      "post": {
+        "description": "",
+        "tags": [
+          "User Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "email": "johndoe@example.com",
+                "password": "password_john_doe"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "maxLength": 64
+                  }
+                },
+                "required": [
+                  "email", "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "User berhasil masuk",
+                  "data": {
+                    "access_token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyOWUwMTcxOC1kYzhiLTExZWUtODkyNC0zMjUwOTZiMzlmNDciLCJuYW1lIjoiSm9obiBEb2UiLCJleHBpcmVkX2F0IjoiMTcwOTgzNTk3OCJ9.NH56MkP0aJeYyRqPbOqo-VuMBFq_ADkAEuwPqUxY0Z4",
+                    "refresh_token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyOWUwMTcxOC1kYzhiLTExZWUtODkyNC0zMjUwOTZiMzlmNDciLCJuYW1lIjoiSm9obiBEb2UiLCJleHBpcmVkX2F0IjoiMTcwOTgzNjAxMSJ9.GM2fIW0Pcw4aAbjxN3kCap50l0YmA7DiWS-SySLfj7c"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "access_token": {
+                          "type": "string"
+                        },
+                        "refresh_token": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Email atau password tidak benar"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Unverified": {
+                    "value": {
+                      "message" : "Tolong verifikasi akun anda terlebih dahulu",
+                      "data": {
+                        "id": "29e01718-dc8b-11ee-8924-325096b39f47"
+                      }
+                    }
+                  },
+                  "Blocked": {
+                    "value": {
+                      "message": "User diblokir"
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kesalahan validasi",
+                  "errors": {
+                    "email": "Email tidak boleh kosong",
+                    "password": "Password tidak boleh kosong"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string"
+                        },
+                        "password": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/auth/my-data": {
       "get": {
@@ -1129,7 +1127,7 @@
           }
         }
       },
-      "post": {
+      "patch": {
         "description": "",
         "tags": [
           "User Authentication"
@@ -1241,11 +1239,248 @@
       }
     },
 
-    "/product/": {
+    "/profile/account_number": {
       "get": {
         "description": "",
         "tags": [
-          "Product"
+          "User Profile"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Success get account number",
+                  "data": {
+                    "user": {
+                      "account_number": "",
+                      "account_number_type": ""
+                    },
+                    "account_number_type_list": [
+                      {
+                        "id": "",
+                        "account_number_name": ""
+                      },
+                      {
+                        "id": "",
+                        "account_number_name": ""
+                      }
+                    ]
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "account_number": {
+                              "type": "string"
+                            },
+                            "account_number_type": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "account_number_type_list": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "account_number_name": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "",
+        "tags": [
+          "User Profile"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "account_number_type_id": "",
+                "account_number": ""
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "account_number_type_id": {
+                    "type": "string"
+                  },
+                  "account_number": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Success update account number"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/product/homepage": {
+      "get": {
+        "description": "",
+        "tags": [
+          "Find Product"
         ],
         "responses": {
           "200": {
@@ -1255,24 +1490,24 @@
                 "example": {
                   "message": "Berhasil mendapatkan semua category",
                   "data": [
-                      {
-                        "id": "cb04dbda-dcb6-11ee-830c-325096b39f47",
-                        "name": "baju",
-                        "url_category": "example.jpg",
-                        "total_product": 6
-                      },
-                      {
-                        "id": "cee80a92-dcb6-11ee-9067-325096b39f47",
-                        "name": "buku",
-                        "url_category": "example.jpg",
-                        "total_product": 3
-                      },
-                      {
-                        "id": "f2212af2-dcb6-11ee-9e72-325096b39f47",
-                        "name": "alat musik",
-                        "url_category": "example.jpg",
-                        "total_product": 3
-                      }
+                    {
+                      "id": "cb04dbda-dcb6-11ee-830c-325096b39f47",
+                      "name": "baju",
+                      "url_category": "example.jpg",
+                      "total_product": 6
+                    },
+                    {
+                      "id": "cee80a92-dcb6-11ee-9067-325096b39f47",
+                      "name": "buku",
+                      "url_category": "example.jpg",
+                      "total_product": 3
+                    },
+                    {
+                      "id": "f2212af2-dcb6-11ee-9e72-325096b39f47",
+                      "name": "alat musik",
+                      "url_category": "example.jpg",
+                      "total_product": 3
+                    }
                   ]
                 },
                 "schema": {
@@ -1331,7 +1566,7 @@
       "get": {
         "description": "",
         "tags": [
-          "Product"
+          "Find Product"
         ],
         "parameters": [
           {
@@ -1607,11 +1842,11 @@
         }
       }
     },
-    "/product/{id}": {
+    "/product/detail/{id}": {
       "get": {
         "description": "",
         "tags": [
-          "Product"
+          "Find Product"
         ],
         "parameters": [
           {
@@ -1648,51 +1883,51 @@
                   }
                 },
                 "schema": {
-                    "type": "object",
-                    "properties": {
-                      "message": {
-                        "type": "string"
-                      },
-                      "data": {
-                        "type": "object",
-                        "properties": {
-                          "product_id": {
-                            "type": "string"
-                          },
-                          "product_name": {
-                            "type": "string"
-                          },
-                          "product_description": {
-                            "type": "string"
-                          },
-                          "product_price": {
-                            "type": "integer"
-                          },
-                          "media": {
-                            "type": "array",
-                            "items": {
-                              "type": "string"
-                            }
-                          },
-                          "owner_id": {
-                            "type": "string"
-                          },
-                          "owner_name": {
-                            "type": "string"
-                          },
-                          "owner_distance": {
-                            "type": "number"
-                          },
-                          "owner_photo_profile": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "product_id": {
+                          "type": "string"
+                        },
+                        "product_name": {
+                          "type": "string"
+                        },
+                        "product_description": {
+                          "type": "string"
+                        },
+                        "product_price": {
+                          "type": "integer"
+                        },
+                        "media": {
+                          "type": "array",
+                          "items": {
                             "type": "string"
                           }
+                        },
+                        "owner_id": {
+                          "type": "string"
+                        },
+                        "owner_name": {
+                          "type": "string"
+                        },
+                        "owner_distance": {
+                          "type": "number"
+                        },
+                        "owner_photo_profile": {
+                          "type": "string"
                         }
                       }
                     }
                   }
                 }
               }
-            },
+            }
+          },
           "401": {
             "description": "",
             "content": {
@@ -1746,11 +1981,53 @@
         }
       }
     },
-    "/product/{id}/buy" : {
+
+    "/product": {
       "post": {
         "description": "",
         "tags": [
-          "Product"
+          "Manage Product"
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "wowo": "adsad",
+                "file": "data"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "wowo": {
+                    "type": "string"
+                  },
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+
+              }
+            }
+          }
+        }
+      }
+    },
+    "/product/{id}" : {
+      "get": {
+        "description": "",
+        "tags": [
+          "Manage Product"
         ],
         "parameters": [
           {
@@ -1764,12 +2041,40 @@
             "required": true
           }
         ],
-        "requestBody": {
-          "description": "",
-          "content": {
-
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "name": "",
+                  "description": "",
+                  "price": "",
+                  "category": "",
+                  "category_id": ""
+                }
+              }
+            }
           }
-        },
+        }
+      },
+      "post": {
+        "description": "",
+        "tags": [
+          "Buy Product"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -1851,7 +2156,793 @@
             }
           }
         }
+      },
+      "patch": {
+        "description": "",
+        "tags": [
+          "Manage Product"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "name": "",
+                "description": "",
+                "category": "",
+                "price": ""
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Success update the product"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "tags": [
+          "Manage Product"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Success delete the product"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/product/{id}/callback" : {
+      "post": {
+        "description": "",
+        "tags": [
+          "Buy Product"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "order_id": "6eb31f9e-63eb-4b11-a81a-4b44fd97ebee"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "order_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Success update transaction status"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/transaction/buy-list": {
+      "get": {
+        "description": "",
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Success get all buy list",
+                  "data": [
+                    {
+                      "id": "",
+                      "product_id": "",
+                      "product_name": "",
+                      "amount": "",
+                      "withdrawal_code": "",
+                      "url_product": "",
+                      "owner_name": ""
+                    },
+                    {
+                      "id": "",
+                      "product_id": "",
+                      "product_name": "",
+                      "amount": "",
+                      "withdrawal_code": "",
+                      "url_product": "",
+                      "owner_name": ""
+                    }
+                  ]
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "product_id": {
+                            "type": "string"
+                          },
+                          "product_name": {
+                            "type": "string"
+                          },
+                          "amount": {
+                            "type": "string"
+                          },
+                          "withdrawal_code": {
+                            "type": "string"
+                          },
+                          "url_product": {
+                            "type": "string"
+                          },
+                          "owner_name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction/sell-list": {
+      "get": {
+        "description": "",
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Success get all buy list",
+                  "data": [
+                    {
+                      "id": "",
+                      "product_id": "",
+                      "product_name": "",
+                      "product_price": "",
+                      "cancel_code": "",
+                      "url_product": "",
+                      "owner_name": ""
+                    },
+                    {
+                      "id": "",
+                      "product_id": "",
+                      "product_name": "",
+                      "product_price": "",
+                      "cancel_code": "",
+                      "url_product": "",
+                      "owner_name": ""
+                    }
+                  ]
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "product_id": {
+                            "type": "string"
+                          },
+                          "product_name": {
+                            "type": "string"
+                          },
+                          "product_price": {
+                            "type": "string"
+                          },
+                          "cancel_code": {
+                            "type": "string"
+                          },
+                          "url_product": {
+                            "type": "string"
+                          },
+                          "owner_name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction/{id}": {
+      "delete": {
+        "description": "",
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "transaction_id": "id-transaction-blablabla"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "transaction_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Success cancel the transaction"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction/{id}/cash-on-delivery": {
+      "patch": {
+        "description": "",
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "withdrawal_code": "178625"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "withdrawal_code": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Success withdrawal"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "cancel_code": "wowowo"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cancel_code": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Success refuse the product"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
+
   }
 }
