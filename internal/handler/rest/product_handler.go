@@ -55,7 +55,7 @@ func (r *Rest) DetailProduct(ctx *gin.Context) {
 		return
 	}
 
-	product, respDetails := r.service.ProductService.GetProduct(id, ctx)
+	product, respDetails := r.service.ProductService.DetailProduct(id, ctx)
 	if respDetails.Error != nil {
 
 		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
@@ -77,7 +77,7 @@ func (r *Rest) DetailProductOwner(ctx *gin.Context) {
 		return
 	}
 
-	product, respDetails := r.service.ProductService.GetProductOwner(id)
+	product, respDetails := r.service.ProductService.DetailProductOwner(id, ctx)
 	if respDetails.Error != nil {
 
 		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
@@ -92,11 +92,24 @@ func (r *Rest) UpdateProduct(ctx *gin.Context) {
 }
 
 func (r *Rest) DeleteProduct(ctx *gin.Context) {
+	idParam := ctx.Param("id")
+	id, err := uuid.Parse(idParam)
+	if err != nil {
+		response.MessageOnly(ctx, 422, "Failed convert id")
+		return
+	}
 
+	respDetails := r.service.ProductService.DeleteProduct(ctx, id)
+	if respDetails.Error != nil {
+		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
+		return
+	}
+
+	response.MessageOnly(ctx, 200, "Success delete product")
 }
 
-func (r *Rest) AllMyProduct(ctx *gin.Context) {
-	products, respDetails := r.service.ProductService.ActiveProducts(ctx)
+func (r *Rest) FindActiveProducts(ctx *gin.Context) {
+	products, respDetails := r.service.ProductService.FindActiveProducts(ctx)
 	if respDetails.Error != nil {
 		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
 		return

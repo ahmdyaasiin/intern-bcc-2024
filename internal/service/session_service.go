@@ -15,7 +15,7 @@ import (
 )
 
 type ISessionService interface {
-	Renew(requests model.RequestForRenewAccessToken) (*model.ResponseForRenew, response.Details)
+	RenewSession(requests model.RequestForRenewAccessToken) (*model.ResponseForRenew, response.Details)
 	Logout(ctx *gin.Context) response.Details
 }
 
@@ -33,7 +33,7 @@ func NewSessionService(sessionRepository repository.ISessionRepository, jwtAuth 
 	}
 }
 
-func (ss *SessionService) Renew(requests model.RequestForRenewAccessToken) (*model.ResponseForRenew, response.Details) {
+func (ss *SessionService) RenewSession(requests model.RequestForRenewAccessToken) (*model.ResponseForRenew, response.Details) {
 	session := new(entity.Session)
 	res := new(model.ResponseForRenew)
 

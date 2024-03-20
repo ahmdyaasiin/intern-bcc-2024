@@ -45,16 +45,16 @@ func (r *Rest) MountEndpoint() {
 
 	// PROFILE ROUTE
 	profile := routerGroup.Group("/profile")
-	profile.GET("/account_number")   // later
-	profile.PATCH("/account_number") // later
+	profile.GET("/account_number", r.middleware.Auth, r.AllAccountNumber)
+	profile.PATCH("/account_number", r.middleware.Auth, r.UpdateAccountNumber)
 
 	// PRODUCT ROUTE
 	product := routerGroup.Group("/product")
 	product.GET("/homepage", r.HomePage)
 	product.GET("/search", r.middleware.Auth, r.SearchProducts)
 	product.GET("/detail/:id", r.middleware.Auth, r.DetailProduct)
-	product.POST("", r.middleware.Auth, r.AddProduct)            // later
-	product.GET("/:id", r.middleware.Auth, r.DetailProductOwner) // later
+	product.POST("", r.middleware.Auth, r.AddProduct) // later
+	product.GET("/:id", r.middleware.Auth, r.DetailProductOwner)
 	product.POST("/:id", r.middleware.Auth, r.BuyProduct)
 	product.PATCH("/:id", r.middleware.Auth, r.UpdateProduct)  // later
 	product.DELETE("/:id", r.middleware.Auth, r.DeleteProduct) // later
@@ -62,11 +62,11 @@ func (r *Rest) MountEndpoint() {
 
 	// TRANSACTION ROUTE
 	transaction := routerGroup.Group("/transaction")
-	transaction.GET("/buy-list", r.middleware.Auth, r.AllMyTransaction)
-	transaction.GET("/sell-list", r.middleware.Auth, r.AllMyProduct)
+	transaction.GET("/buy-list", r.middleware.Auth, r.FindActiveTransactions)
+	transaction.GET("/sell-list", r.middleware.Auth, r.FindActiveProducts)
 	transaction.DELETE("/:id", r.middleware.Auth, r.CancelTransaction)
-	transaction.PATCH("/:id/cash-on-delivery", r.middleware.Auth, r.RefuseTransaction)  // need withdrawal code
-	transaction.DELETE("/:id/cash-on-delivery", r.middleware.Auth, r.AcceptTransaction) // need cancel code
+	transaction.PATCH("/:id/cash-on-delivery", r.middleware.Auth, r.RefuseTransaction)
+	transaction.DELETE("/:id/cash-on-delivery", r.middleware.Auth, r.AcceptTransaction)
 
 }
 

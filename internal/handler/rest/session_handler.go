@@ -28,7 +28,7 @@ func (r *Rest) RenewSession(ctx *gin.Context) {
 		return
 	}
 
-	token, respDetails := r.service.SessionService.Renew(requests)
+	token, respDetails := r.service.SessionService.RenewSession(requests)
 	if respDetails.Error != nil {
 		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
 		return

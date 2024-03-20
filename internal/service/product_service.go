@@ -17,10 +17,11 @@ import (
 
 type IProductService interface {
 	SearchProducts(requests model.RequestForSearch) (*model.ResponseSearch, response.Details)
-	GetProduct(id uuid.UUID, ctx *gin.Context) (*model.ResponseForGetProductByID, response.Details)
-	GetProductOwner(id uuid.UUID) (*model.ResponseForGetProductByIDOwner, response.Details)
+	DetailProduct(id uuid.UUID, ctx *gin.Context) (*model.ResponseForGetProductByID, response.Details)
+	DetailProductOwner(id uuid.UUID, ctx *gin.Context) (*model.ResponseForGetProductByIDOwner, response.Details)
 	Find(requests model.ParamForFind) (*entity.Product, response.Details)
-	ActiveProducts(ctx *gin.Context) (*[]model.ResponseForActiveProducts, response.Details)
+	FindActiveProducts(ctx *gin.Context) (*[]model.ResponseForActiveProducts, response.Details)
+	DeleteProduct(ctx *gin.Context, id uuid.UUID) response.Details
 }
 
 type ProductService struct {
@@ -88,7 +89,7 @@ func (ps *ProductService) SearchProducts(requests model.RequestForSearch) (*mode
 	return res, response.Details{Code: 200, Message: "Success get searched products", Error: nil}
 }
 
-func (ps *ProductService) GetProduct(id uuid.UUID, ctx *gin.Context) (*model.ResponseForGetProductByID, response.Details) {
+func (ps *ProductService) DetailProduct(id uuid.UUID, ctx *gin.Context) (*model.ResponseForGetProductByID, response.Details) {
 	product := new(model.ResponseForGetProductByID)
 	medias := new([]entity.Media)
 
@@ -125,7 +126,7 @@ func (ps *ProductService) GetProduct(id uuid.UUID, ctx *gin.Context) (*model.Res
 	return product, response.Details{Code: 200, Message: "Success get product details", Error: nil}
 }
 
-func (ps *ProductService) GetProductOwner(id uuid.UUID) (*model.ResponseForGetProductByIDOwner, response.Details) {
+func (ps *ProductService) DetailProductOwner(id uuid.UUID, ctx *gin.Context) (*model.ResponseForGetProductByIDOwner, response.Details) {
 	res := new(model.ResponseForGetProductByIDOwner)
 	product := new(entity.Product)
 	medias := new([]entity.Media)
@@ -133,8 +134,16 @@ func (ps *ProductService) GetProductOwner(id uuid.UUID) (*model.ResponseForGetPr
 	tx := ps.db.Begin()
 	defer tx.Rollback()
 
+	user, err := ps.jwtAuth.GetLoginUser(ctx)
+	if err != nil {
+		log.Println(err)
+
+		return res, response.Details{Code: 500, Message: "Failed to get login user", Error: err}
+	}
+
 	respDetails := ps.pr.FindProductOwner(tx, product, model.ParamForFind{
-		ID: id,
+		ID:     id,
+		UserID: user.ID,
 	})
 	if respDetails.Error != nil {
 		log.Println(respDetails.Error)
@@ -182,7 +191,7 @@ func (ps *ProductService) Find(requests model.ParamForFind) (*entity.Product, re
 	return product, response.Details{Code: 200, Message: "Success get product", Error: nil}
 }
 
-func (ps *ProductService) ActiveProducts(ctx *gin.Context) (*[]model.ResponseForActiveProducts, response.Details) {
+func (ps *ProductService) FindActiveProducts(ctx *gin.Context) (*[]model.ResponseForActiveProducts, response.Details) {
 	product := new([]model.ResponseForActiveProducts)
 
 	tx := ps.db.Begin()
@@ -195,7 +204,7 @@ func (ps *ProductService) ActiveProducts(ctx *gin.Context) (*[]model.ResponseFor
 		return product, response.Details{Code: 500, Message: "Failed to get login user", Error: err}
 	}
 
-	respDetails := ps.pr.FindActiveProduct(tx, product, user)
+	respDetails := ps.pr.FindActiveProducts(tx, product, user)
 	if respDetails.Error != nil {
 		log.Println(respDetails.Error)
 
@@ -209,4 +218,53 @@ func (ps *ProductService) ActiveProducts(ctx *gin.Context) (*[]model.ResponseFor
 	}
 
 	return product, response.Details{Code: 200, Message: "Success get all active products", Error: nil}
+}
+
+func (ps *ProductService) DeleteProduct(ctx *gin.Context, id uuid.UUID) response.Details {
+	product := new(entity.Product)
+
+	tx := ps.db.Begin()
+	defer tx.Rollback()
+
+	user, err := ps.jwtAuth.GetLoginUser(ctx)
+	if err != nil {
+		log.Println(err)
+
+		return response.Details{Code: 500, Message: "Failed to get login user", Error: err}
+	}
+
+	respDetails := ps.pr.Find(tx, product, model.ParamForFind{
+		ID: id,
+	})
+	if respDetails.Error != nil {
+		log.Println(respDetails.Error)
+
+		return respDetails
+	}
+
+	if user.ID != product.UserID {
+		log.Println("the user is not the owner of product")
+
+		return response.Details{Code: 403, Message: "Your'e not the owner of the product"}
+	}
+
+	if respDetails = ps.mr.DeleteAllMedia(tx, id); respDetails.Error != nil {
+		log.Println(respDetails.Error)
+
+		return respDetails
+	}
+
+	if respDetails = ps.pr.Delete(tx, product); respDetails.Error != nil {
+		log.Println(respDetails.Error)
+
+		return respDetails
+	}
+
+	if err = tx.Commit().Error; err != nil {
+		log.Println(err)
+
+		return response.Details{Code: 500, Message: "Failed to commit transaction", Error: err}
+	}
+
+	return response.Details{Code: 200, Message: "Success delete product", Error: nil}
 }

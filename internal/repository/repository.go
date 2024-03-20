@@ -11,6 +11,7 @@ type Repository struct {
 	CategoryRepository    ICategoryRepository
 	MediaRepository       IMediaRepository
 	TransactionRepository ITransactionRepository
+	AccountRepository     IAccountRepository
 }
 
 func NewRepository(db *gorm.DB) *Repository {
@@ -22,6 +23,7 @@ func NewRepository(db *gorm.DB) *Repository {
 	pr := NewProductRepository(db, cr)
 	mr := NewMediaRepository(db)
 	trr := NewTransactionRepository(db)
+	ar := NewAccountRepository(db)
 
 	return &Repository{
 		OtpRepository:         or,
@@ -32,5 +34,6 @@ func NewRepository(db *gorm.DB) *Repository {
 		CategoryRepository:    cr,
 		MediaRepository:       mr,
 		TransactionRepository: trr,
+		AccountRepository:     ar,
 	}
 }

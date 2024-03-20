@@ -14,6 +14,7 @@ type Service struct {
 	ProductService     IProductService
 	CategoryService    ICategoryService
 	TransactionService ITransactionService
+	AccountService     IAccountService
 }
 
 type InitParam struct {
@@ -23,13 +24,14 @@ type InitParam struct {
 }
 
 func NewService(param InitParam) *Service {
-	userService := NewUserService(param.Repository.UserRepository, param.Repository.OtpRepository, param.Repository.TokenRepository, param.Repository.SessionRepository, param.Bcrypt, param.JwtAuth)
+	userService := NewUserService(param.Repository.UserRepository, param.Repository.OtpRepository, param.Repository.TokenRepository, param.Repository.SessionRepository, param.Repository.AccountRepository, param.Bcrypt, param.JwtAuth)
 	otpService := NewOtpService(param.Repository.OtpRepository, param.Repository.UserRepository)
 	sessionService := NewSessionService(param.Repository.SessionRepository, param.JwtAuth)
 	tokenService := NewTokenService(param.Repository.TokenRepository, param.Repository.UserRepository)
 	productService := NewProductService(param.Repository.CategoryRepository, param.Repository.ProductRepository, param.Repository.MediaRepository, param.Repository.UserRepository, param.JwtAuth)
 	categoryService := NewCategoryService(param.Repository.CategoryRepository)
 	transactionService := NewTransactionService(param.Repository.ProductRepository, param.Repository.TransactionRepository, param.JwtAuth)
+	accountService := NewAccountService(param.Repository.AccountRepository)
 
 	return &Service{
 		UserService:        userService,
@@ -39,5 +41,6 @@ func NewService(param InitParam) *Service {
 		ProductService:     productService,
 		CategoryService:    categoryService,
 		TransactionService: transactionService,
+		AccountService:     accountService,
 	}
 }

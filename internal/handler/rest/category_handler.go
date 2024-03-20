@@ -6,7 +6,7 @@ import (
 )
 
 func (r *Rest) HomePage(ctx *gin.Context) {
-	categories, respDetails := r.service.CategoryService.GetHomePage()
+	categories, respDetails := r.service.CategoryService.HomePage()
 	if respDetails.Error != nil {
 		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
 		return

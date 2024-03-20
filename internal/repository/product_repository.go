@@ -14,7 +14,9 @@ type IProductRepository interface {
 	Find(tx *gorm.DB, product *entity.Product, param model.ParamForFind) response.Details
 	GetByID(tx *gorm.DB, product *model.ResponseForGetProductByID, productID uuid.UUID, user entity.User) response.Details
 	FindProductOwner(tx *gorm.DB, product *entity.Product, param model.ParamForFind) response.Details
-	FindActiveProduct(tx *gorm.DB, product *[]model.ResponseForActiveProducts, user entity.User) response.Details
+	FindActiveProducts(tx *gorm.DB, product *[]model.ResponseForActiveProducts, user entity.User) response.Details
+	Update(tx *gorm.DB, product *entity.Product) response.Details
+	Delete(tx *gorm.DB, product *entity.Product) response.Details
 }
 
 type ProductRepository struct {
@@ -79,10 +81,26 @@ func (pr *ProductRepository) GetByID(tx *gorm.DB, product *model.ResponseForGetP
 	return response.Details{Code: 200, Message: "Success to find product", Error: nil}
 }
 
-func (po *ProductRepository) FindActiveProduct(tx *gorm.DB, product *[]model.ResponseForActiveProducts, user entity.User) response.Details {
-	if err := tx.Debug().Raw("SELECT (SELECT name FROM users WHERE users.id = products.user_id) AS owner_name, (SELECT id FROM transactions WHERE transactions.product_id = products.id) AS transaction_id, (SELECT url FROM media WHERE media.product_id = products.id LIMIT 1) AS url_product, products.id AS product_id, products.name AS product_name, products.price AS product_price, products.cancel_code AS cancel_code FROM products WHERE products.user_id = '" + user.ID.String() + "' AND products.id IN (SELECT transactions.product_id FROM transactions)").Scan(product).Error; err != nil {
+func (pr *ProductRepository) FindActiveProducts(tx *gorm.DB, product *[]model.ResponseForActiveProducts, user entity.User) response.Details {
+	if err := tx.Debug().Raw("SELECT (SELECT name FROM users WHERE users.id = products.user_id) AS owner_name, (SELECT id FROM transactions WHERE transactions.product_id = products.id) AS transaction_id, (SELECT url FROM media WHERE media.product_id = products.id LIMIT 1) AS url_product, products.id AS product_id, products.name AS product_name, products.price AS product_price, products.cancel_code AS cancel_code FROM products WHERE products.user_id = '" + user.ID.String() + "' AND products.id IN (SELECT transactions.product_id FROM transactions WHERE transactions.status = 'paid')").Scan(product).Error; err != nil {
 		return response.Details{Code: 500, Message: "Failed to find active products", Error: err}
 	}
 
 	return response.Details{Code: 200, Message: "Success to find active products"}
+}
+
+func (pr *ProductRepository) Update(tx *gorm.DB, product *entity.Product) response.Details {
+	if err := tx.Debug().Updates(product).Error; err != nil {
+		return response.Details{Code: 500, Message: "Failed to update product", Error: err}
+	}
+
+	return response.Details{Code: 200, Message: "Success to update product", Error: nil}
+}
+
+func (pr *ProductRepository) Delete(tx *gorm.DB, product *entity.Product) response.Details {
+	if err := tx.Debug().Delete(product).Error; err != nil {
+		return response.Details{Code: 500, Message: "Failed to delete product", Error: err}
+	}
+
+	return response.Details{Code: 200, Message: "Success to delete product", Error: nil}
 }

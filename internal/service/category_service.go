@@ -10,7 +10,7 @@ import (
 )
 
 type ICategoryService interface {
-	GetHomePage() (*[]model.ResponseForHomePage, response.Details)
+	HomePage() (*[]model.ResponseForHomePage, response.Details)
 }
 
 type CategoryService struct {
@@ -25,7 +25,7 @@ func NewCategoryService(categoryRepository repository.ICategoryRepository) ICate
 	}
 }
 
-func (cs *CategoryService) GetHomePage() (*[]model.ResponseForHomePage, response.Details) {
+func (cs *CategoryService) HomePage() (*[]model.ResponseForHomePage, response.Details) {
 	categories := new([]model.ResponseForHomePage)
 
 	tx := cs.db.Begin()

@@ -28,7 +28,7 @@ func (r *Rest) ResendOtp(ctx *gin.Context) {
 		return
 	}
 
-	respDetails := r.service.OtpService.Resend(requests)
+	respDetails := r.service.OtpService.ResendOtp(requests)
 	if respDetails.Error != nil {
 		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
 		return

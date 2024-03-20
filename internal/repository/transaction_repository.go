@@ -12,7 +12,7 @@ type ITransactionRepository interface {
 	Find(tx *gorm.DB, transaction *entity.Transaction, param model.ParamForFind) response.Details
 	Update(tx *gorm.DB, transaction *entity.Transaction) response.Details
 	Delete(tx *gorm.DB, transaction *entity.Transaction) response.Details
-	FindActiveTransaction(tx *gorm.DB, transaction *[]model.ResponseForActiveTransactions, user entity.User) response.Details
+	FindActiveTransactions(tx *gorm.DB, transaction *[]model.ResponseForActiveTransactions, user entity.User) response.Details
 }
 
 type TransactionRepository struct {
@@ -55,8 +55,8 @@ func (tr *TransactionRepository) Delete(tx *gorm.DB, transaction *entity.Transac
 	return response.Details{Code: 200, Message: "Success to delete transaction", Error: nil}
 }
 
-func (tr *TransactionRepository) FindActiveTransaction(tx *gorm.DB, transaction *[]model.ResponseForActiveTransactions, user entity.User) response.Details {
-	if err := tx.Debug().Raw("SELECT transactions.id AS transaction_id, products.id as product_id, products.name AS product_name, products.price AS product_price, transactions.withdrawal_code AS withdrawal_code, transactions.user_id AS owner_id, (SELECT name FROM users WHERE users.id = owner_id) AS owner_name, (SELECT url FROM media WHERE media.product_id = products.id LIMIT 1) AS url_product FROM transactions INNER JOIN products ON transactions.product_id = products.id WHERE transactions.user_id = '" + user.ID.String() + "'").Scan(transaction).Error; err != nil {
+func (tr *TransactionRepository) FindActiveTransactions(tx *gorm.DB, transaction *[]model.ResponseForActiveTransactions, user entity.User) response.Details {
+	if err := tx.Debug().Raw("SELECT transactions.id AS transaction_id, products.id as product_id, products.name AS product_name, products.price AS product_price, transactions.withdrawal_code AS withdrawal_code, transactions.user_id AS owner_id, (SELECT name FROM users WHERE users.id = owner_id) AS owner_name, (SELECT url FROM media WHERE media.product_id = products.id LIMIT 1) AS url_product FROM transactions INNER JOIN products ON transactions.product_id = products.id WHERE transactions.user_id = '" + user.ID.String() + "' AND transactions.status = 'paid'").Scan(transaction).Error; err != nil {
 		return response.Details{Code: 500, Message: "Failed to get active transactions"}
 	}
 

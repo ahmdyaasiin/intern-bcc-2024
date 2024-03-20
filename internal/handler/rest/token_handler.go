@@ -39,7 +39,7 @@ func (r *Rest) ResetPassword(ctx *gin.Context) {
 
 func (r *Rest) CheckResetToken(ctx *gin.Context) {
 	token := ctx.Param("token")
-	if respDetails := r.service.TokenService.CheckToken(token); respDetails.Error != nil {
+	if respDetails := r.service.TokenService.CheckResetToken(token); respDetails.Error != nil {
 
 		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
 		return

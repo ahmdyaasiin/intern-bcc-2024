@@ -15,7 +15,7 @@ import (
 )
 
 type IOtpService interface {
-	Resend(requests model.RequestForResend) response.Details
+	ResendOtp(requests model.RequestForResend) response.Details
 }
 
 type OtpService struct {
@@ -32,7 +32,7 @@ func NewOtpService(otpRepository repository.IOtpRepository, userRepository repos
 	}
 }
 
-func (cs *OtpService) Resend(requests model.RequestForResend) response.Details {
+func (cs *OtpService) ResendOtp(requests model.RequestForResend) response.Details {
 	user := new(entity.User)
 	otp := new(entity.OtpCode)
 

@@ -41,7 +41,7 @@ func (r *Rest) CheckPayment(ctx *gin.Context) {
 		return
 	}
 
-	respDetails := r.service.TransactionService.VerifyPayment(requests.OrderID)
+	respDetails := r.service.TransactionService.CheckPayment(requests.OrderID)
 	if respDetails.Error != nil {
 		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
 		return
@@ -50,8 +50,8 @@ func (r *Rest) CheckPayment(ctx *gin.Context) {
 	response.MessageOnly(ctx, 200, respDetails.Message)
 }
 
-func (r *Rest) AllMyTransaction(ctx *gin.Context) {
-	transaction, respDetails := r.service.TransactionService.ActiveTransaction(ctx)
+func (r *Rest) FindActiveTransactions(ctx *gin.Context) {
+	transaction, respDetails := r.service.TransactionService.FindActiveTransactions(ctx)
 	if respDetails.Error != nil {
 		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
 		return

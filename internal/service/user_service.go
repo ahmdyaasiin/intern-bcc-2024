@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"intern-bcc-2024/entity"
@@ -20,10 +21,11 @@ import (
 
 type IUserService interface {
 	Register(requests model.RequestForRegister) (*model.ResponseForRegister, response.Details)
-	Verify(requests model.RequestForVerify) response.Details
-	ChangePassword(token string, request model.RequestForChangePassword) response.Details
+	VerifyAfterRegister(requests model.RequestForVerify) response.Details
+	ChangePasswordFromReset(token string, request model.RequestForChangePassword) response.Details
 	Login(requests model.RequestForLogin) (*model.ResponseForLogin, response.Details)
 	Find(requests model.ParamForFind) (*entity.User, response.Details)
+	UpdateAccountNumber(ctx *gin.Context, requests model.RequestUpdateAccountNumber) response.Details
 }
 
 type UserService struct {
@@ -32,17 +34,19 @@ type UserService struct {
 	or      repository.IOtpRepository
 	tr      repository.ITokenRepository
 	sr      repository.ISessionRepository
+	ar      repository.IAccountRepository
 	bcrypt  bcrypt.Interface
 	jwtAuth jwt.Interface
 }
 
-func NewUserService(userRepository repository.IUserRepository, otpRepository repository.IOtpRepository, tokenRepository repository.ITokenRepository, sessionRepository repository.ISessionRepository, bcrypt bcrypt.Interface, jwtAuth jwt.Interface) IUserService {
+func NewUserService(userRepository repository.IUserRepository, otpRepository repository.IOtpRepository, tokenRepository repository.ITokenRepository, sessionRepository repository.ISessionRepository, accountRepository repository.IAccountRepository, bcrypt bcrypt.Interface, jwtAuth jwt.Interface) IUserService {
 	return &UserService{
 		db:      mysql.Connection,
 		ur:      userRepository,
 		or:      otpRepository,
 		tr:      tokenRepository,
 		sr:      sessionRepository,
+		ar:      accountRepository,
 		bcrypt:  bcrypt,
 		jwtAuth: jwtAuth,
 	}
@@ -129,7 +133,7 @@ func (us *UserService) Register(requests model.RequestForRegister) (*model.Respo
 	return res, response.Details{Code: 201, Message: "Success Register", Error: nil}
 }
 
-func (us *UserService) Verify(requests model.RequestForVerify) response.Details {
+func (us *UserService) VerifyAfterRegister(requests model.RequestForVerify) response.Details {
 	user := new(entity.User)
 	otp := new(entity.OtpCode)
 
@@ -197,7 +201,7 @@ func (us *UserService) Verify(requests model.RequestForVerify) response.Details 
 	return response.Details{Code: 200, Message: "Success verify account", Error: nil}
 }
 
-func (us *UserService) ChangePassword(tokenRequest string, request model.RequestForChangePassword) response.Details {
+func (us *UserService) ChangePasswordFromReset(tokenRequest string, request model.RequestForChangePassword) response.Details {
 	var token *entity.ResetToken
 	var user *entity.User
 
@@ -317,6 +321,8 @@ func (us *UserService) Login(requests model.RequestForLogin) (*model.ResponseFor
 	}
 
 	expiredAt, err := strconv.Atoi(os.Getenv("REFRESH_TOKEN_TIME"))
+	// handle error
+
 	session = &entity.Session{
 		ID:        uuid.New(),
 		UserID:    user.ID,
@@ -353,4 +359,54 @@ func (us *UserService) Find(requests model.ParamForFind) (*entity.User, response
 	}
 
 	return user, response.Details{Code: 200, Message: "Success get user", Error: nil}
+}
+
+func (us *UserService) UpdateAccountNumber(ctx *gin.Context, requests model.RequestUpdateAccountNumber) response.Details {
+	account := new(entity.AccountNumberType)
+
+	tx := us.db.Begin()
+	defer tx.Rollback()
+
+	defaultUUID, err := uuid.Parse("00000000-0000-0000-0000-000000000000")
+	if err != nil {
+		log.Println(err)
+
+		return response.Details{Code: 500, Message: "Failed to convert default uuid", Error: err}
+	}
+
+	if requests.ID == defaultUUID {
+		log.Println("user sent default UUID as request body")
+
+		return response.Details{Code: 403, Message: "Can't setting to default UUID"}
+	}
+
+	respDetails := us.ar.Find(tx, account, model.ParamForFind{
+		ID: requests.ID,
+	})
+	if respDetails.Error != nil {
+		return respDetails
+	}
+
+	user, err := us.jwtAuth.GetLoginUser(ctx)
+	if err != nil {
+		log.Println(err)
+
+		return response.Details{Code: 500, Message: "Failed to get login user", Error: err}
+	}
+
+	user.AccountNumber = requests.AccountNumber
+	user.AccountNumberID = requests.ID
+	if respDetails = us.ur.Update(tx, &user); respDetails.Error != nil {
+		log.Println(respDetails.Error)
+
+		return respDetails
+	}
+
+	if err = tx.Commit().Error; err != nil {
+		log.Println(err)
+
+		return response.Details{Code: 500, Message: "Failed to commit transaction", Error: err}
+	}
+
+	return response.Details{Code: 200, Message: "Success update account number", Error: nil}
 }

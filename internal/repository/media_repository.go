@@ -9,6 +9,7 @@ import (
 
 type IMediaRepository interface {
 	GetMedia(tx *gorm.DB, medias *[]entity.Media, id uuid.UUID) response.Details
+	DeleteAllMedia(tx *gorm.DB, productID uuid.UUID) response.Details
 }
 
 type MediaRepository struct {
@@ -25,4 +26,12 @@ func (mr *MediaRepository) GetMedia(tx *gorm.DB, medias *[]entity.Media, id uuid
 	}
 
 	return response.Details{Code: 200, Message: "Success to get all media of product", Error: nil}
+}
+
+func (mr *MediaRepository) DeleteAllMedia(tx *gorm.DB, productID uuid.UUID) response.Details {
+	if err := tx.Debug().Where("product_id = ?", productID).Delete(entity.Media{}).Error; err != nil {
+		return response.Details{Code: 500, Message: "Failed delete all media product", Error: err}
+	}
+
+	return response.Details{Code: 200, Message: "Success delete all media product", Error: nil}
 }

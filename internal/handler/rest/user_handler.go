@@ -58,7 +58,7 @@ func (r *Rest) VerifyAfterRegister(ctx *gin.Context) {
 		return
 	}
 
-	respDetails := r.service.UserService.Verify(requests)
+	respDetails := r.service.UserService.VerifyAfterRegister(requests)
 	if respDetails.Error != nil {
 		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
 		return
@@ -87,7 +87,7 @@ func (r *Rest) ChangePasswordFromReset(ctx *gin.Context) {
 	}
 
 	token := ctx.Param("token")
-	if respDetails := r.service.UserService.ChangePassword(token, requests); respDetails.Error != nil {
+	if respDetails := r.service.UserService.ChangePasswordFromReset(token, requests); respDetails.Error != nil {
 
 		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
 		return
@@ -141,4 +141,31 @@ func (r *Rest) MyData(ctx *gin.Context) {
 	}
 
 	response.WithData(ctx, 200, "Success to get data", user.(entity.User))
+}
+
+func (r *Rest) UpdateAccountNumber(ctx *gin.Context) {
+	var requests model.RequestUpdateAccountNumber
+	if err := ctx.ShouldBindJSON(&requests); err != nil {
+		var ve validator.ValidationErrors
+		errorList := validation.GetError(err, ve)
+		if errorList != nil {
+			log.Println("Failed to validate user requests")
+
+			response.WithErrors(ctx, 422, "Failed to validate user requests", errorList)
+			return
+		}
+
+		log.Println("Failed to bind requests")
+
+		response.MessageOnly(ctx, 422, "Failed to bind requests")
+		return
+	}
+
+	respDetails := r.service.UserService.UpdateAccountNumber(ctx, requests)
+	if respDetails.Error != nil {
+		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
+		return
+	}
+
+	response.MessageOnly(ctx, 201, "Success update")
 }

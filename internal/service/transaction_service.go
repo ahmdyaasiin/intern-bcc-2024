@@ -19,8 +19,8 @@ import (
 
 type ITransactionService interface {
 	BuyProduct(ctx *gin.Context, id uuid.UUID) (model.ResponseForBuyProduct, response.Details)
-	VerifyPayment(idTransaction uuid.UUID) response.Details
-	ActiveTransaction(ctx *gin.Context) (*[]model.ResponseForActiveTransactions, response.Details)
+	CheckPayment(idTransaction uuid.UUID) response.Details
+	FindActiveTransactions(ctx *gin.Context) (*[]model.ResponseForActiveTransactions, response.Details)
 	CancelTransaction(ctx *gin.Context, idTransaction uuid.UUID, requestTransactionID uuid.UUID) response.Details
 	RefuseTransaction(ctx *gin.Context, id uuid.UUID, requests model.RequestForRefuseTransaction) response.Details
 	AcceptTransaction(ctx *gin.Context, id uuid.UUID, requests model.RequestForWithdrawTransaction) response.Details
@@ -56,8 +56,18 @@ func (ts *TransactionService) BuyProduct(ctx *gin.Context, id uuid.UUID) (model.
 		return model.ResponseForBuyProduct{}, response.Details{Code: 500, Message: "Failed to get login user", Error: err}
 	}
 
-	// TODO check if there's a transaction is on progress
-	// TODO return err if buyer_id == owner_id
+	defaultUUID, err := uuid.Parse("00000000-0000-0000-0000-000000000000")
+	if err != nil {
+		log.Println(err)
+
+		return model.ResponseForBuyProduct{}, response.Details{Code: 500, Message: "Failed to convert default uuid", Error: err}
+	}
+
+	if user.AccountNumber == "0" || user.AccountNumberID == defaultUUID {
+		log.Println("user haven't set account number and account number id")
+
+		return model.ResponseForBuyProduct{}, response.Details{Code: 500, Message: "User haven't set account number and account number id", Error: errors.New("user haven't set account number and account number id")}
+	}
 
 	respDetails := ts.pr.Find(tx, product, model.ParamForFind{
 		ID: id,
@@ -68,19 +78,25 @@ func (ts *TransactionService) BuyProduct(ctx *gin.Context, id uuid.UUID) (model.
 		return model.ResponseForBuyProduct{}, respDetails
 	}
 
-	respDetails = ts.trr.Find(tx, transaction, model.ParamForFind{
-		ProductID: product.ID,
-	})
-	if respDetails.Error == nil {
-		log.Println("there's a transaction is on progress")
-
-		return model.ResponseForBuyProduct{}, response.Details{Code: 403, Message: "An other transaction is on progress", Error: errors.New("an other transaction is on progress")}
-	}
-
 	if user.ID == product.UserID {
 		log.Println("you're the owner of the product")
 
 		return model.ResponseForBuyProduct{}, response.Details{Code: 403, Message: "You're the owner of the product", Error: errors.New("you're the owner")}
+	}
+
+	respDetails = ts.trr.Find(tx, transaction, model.ParamForFind{
+		ProductID: product.ID,
+	})
+	if respDetails.Error == nil {
+		if transaction.Status == "completed" {
+			log.Println("the item was sold")
+
+			return model.ResponseForBuyProduct{}, response.Details{Code: 403, Message: "the item was sold", Error: errors.New("the item was sold")}
+		} else {
+			log.Println("there's a transaction is on progress")
+
+			return model.ResponseForBuyProduct{}, response.Details{Code: 403, Message: "please kindly wait, someone is on transaction for this item", Error: errors.New("please kindly wait, someone is on transaction for this item")}
+		}
 	}
 
 	idTransaction := uuid.New()
@@ -89,7 +105,7 @@ func (ts *TransactionService) BuyProduct(ctx *gin.Context, id uuid.UUID) (model.
 		UserID:         user.ID,
 		ProductID:      product.ID,
 		Amount:         product.Price,
-		Status:         "pending",
+		Status:         "unpaid",
 		WithdrawalCode: mail.GenerateSixCode(),
 	}
 
@@ -116,6 +132,13 @@ func (ts *TransactionService) BuyProduct(ctx *gin.Context, id uuid.UUID) (model.
 		return model.ResponseForBuyProduct{}, respDetails
 	}
 
+	product.CancelCode = mail.GenerateSixCode()
+	if respDetails = ts.pr.Update(tx, product); respDetails.Error != nil {
+		log.Println(err)
+
+		return model.ResponseForBuyProduct{}, respDetails
+	}
+
 	if err = tx.Commit().Error; err != nil {
 		return model.ResponseForBuyProduct{}, response.Details{Code: 500, Message: "Failed to commit transaction", Error: err}
 	}
@@ -125,7 +148,7 @@ func (ts *TransactionService) BuyProduct(ctx *gin.Context, id uuid.UUID) (model.
 	}, response.Details{Code: 200, Message: "Success create transaction", Error: nil}
 }
 
-func (ts *TransactionService) VerifyPayment(idTransaction uuid.UUID) response.Details {
+func (ts *TransactionService) CheckPayment(idTransaction uuid.UUID) response.Details {
 	transaction := new(entity.Transaction)
 
 	tx := ts.db.Begin()
@@ -149,7 +172,7 @@ func (ts *TransactionService) VerifyPayment(idTransaction uuid.UUID) response.De
 
 	if (resp.TransactionStatus == "capture" && resp.FraudStatus == "accept") || resp.TransactionStatus == "settlement" {
 		// success - set transaction status to success and generate withdrawal token
-		transaction.Status = "success"
+		transaction.Status = "paid"
 		if err = ts.trr.Update(tx, transaction).Error; err != nil {
 			return response.Details{Code: 500, Message: "Failed update transaction", Error: err}
 		}
@@ -173,16 +196,16 @@ func (ts *TransactionService) VerifyPayment(idTransaction uuid.UUID) response.De
 	} else if resp.TransactionStatus == "pending" {
 		return response.Details{Code: 200, Message: "Transaction pending", Error: nil}
 	}
-	log.Println(resp.TransactionStatus)
-
-	return response.Details{Code: 200, Message: fmt.Sprintf("Transaction %s", resp.TransactionStatus), Error: nil}
 
 	// TODO set transaction status
 	// TODO Generate Token for COD
 
+	log.Println(resp.TransactionStatus)
+
+	return response.Details{Code: 200, Message: fmt.Sprintf("Transaction %s", resp.TransactionStatus), Error: nil}
 }
 
-func (ts *TransactionService) ActiveTransaction(ctx *gin.Context) (*[]model.ResponseForActiveTransactions, response.Details) {
+func (ts *TransactionService) FindActiveTransactions(ctx *gin.Context) (*[]model.ResponseForActiveTransactions, response.Details) {
 	transaction := new([]model.ResponseForActiveTransactions)
 
 	tx := ts.db.Begin()
@@ -195,7 +218,7 @@ func (ts *TransactionService) ActiveTransaction(ctx *gin.Context) (*[]model.Resp
 		return transaction, response.Details{Code: 500, Message: "Failed to get login user", Error: err}
 	}
 
-	respDetails := ts.trr.FindActiveTransaction(tx, transaction, user)
+	respDetails := ts.trr.FindActiveTransactions(tx, transaction, user)
 	if respDetails.Error != nil {
 		log.Println(respDetails.Error)
 
@@ -335,7 +358,7 @@ func (ts *TransactionService) AcceptTransaction(ctx *gin.Context, id uuid.UUID, 
 	}
 
 	// TODO delete transaction
-	transaction.Status = "success"
+	transaction.Status = "completed"
 	respDetails = ts.trr.Update(tx, transaction)
 	if respDetails.Error != nil {
 		return respDetails

@@ -18,7 +18,7 @@ import (
 
 type ITokenService interface {
 	ResetPassword(requests model.RequestForReset) response.Details
-	CheckToken(token string) response.Details
+	CheckResetToken(token string) response.Details
 }
 
 type TokenService struct {
@@ -98,7 +98,7 @@ func (ts *TokenService) ResetPassword(requests model.RequestForReset) response.D
 	return response.Details{Code: 200, Message: "Success send link reset password", Error: nil}
 }
 
-func (ts *TokenService) CheckToken(tokenRequest string) response.Details {
+func (ts *TokenService) CheckResetToken(tokenRequest string) response.Details {
 	token := new(entity.ResetToken)
 
 	tx := ts.db.Begin()
