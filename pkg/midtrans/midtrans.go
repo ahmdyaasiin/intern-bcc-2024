@@ -1,6 +1,7 @@
 package midtrans
 
 import (
+	"fmt"
 	"github.com/google/uuid"
 	"github.com/midtrans/midtrans-go"
 	"github.com/midtrans/midtrans-go/coreapi"
@@ -17,20 +18,23 @@ func CreateToken(idTransaction uuid.UUID, product *entity.Product) (string, resp
 			OrderID:  idTransaction.String(),
 			GrossAmt: int64(product.Price),
 		},
+		Callbacks: &snap.Callbacks{
+			Finish: fmt.Sprintf("%s/transaction", os.Getenv("LINK_FRONTEND")),
+		},
 		EnabledPayments: []snap.SnapPaymentType{
 			snap.PaymentTypeGopay,
 			snap.PaymentTypeShopeepay,
 			snap.PaymentTypeBankTransfer,
 		},
 		Expiry: &snap.ExpiryDetails{
-			Duration: 1,
+			Duration: 5,
 			Unit:     "minute",
 		},
 	}
 
 	var client snap.Client
 	client.New(serverKey, midtrans.Sandbox)
-	client.Options.SetPaymentOverrideNotification("https://seahorse-cool-kodiak.ngrok-free.app/api/v1/product/payment/callback")
+	client.Options.SetPaymentOverrideNotification(fmt.Sprintf("%s/product/payment/callback", os.Getenv("LINK_BACKEND")))
 
 	snapResp, err := client.CreateTransactionToken(req)
 	if err != nil {
@@ -46,7 +50,6 @@ func VerifyPayment(idTransaction uuid.UUID) (*coreapi.TransactionStatusResponse,
 	var client coreapi.Client
 	client.New(serverKey, midtrans.Sandbox)
 
-	// 4. Check transaction to Midtrans with param orderId
 	transactionStatusResp, e := client.CheckTransaction(idTransaction.String())
 	if e != nil {
 		return nil, e
