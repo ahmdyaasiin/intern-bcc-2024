@@ -12,9 +12,9 @@ type User struct {
 	Address         string    `json:"address" gorm:"type:varchar(255);not null"`
 	Latitude        float64   `json:"latitude" gorm:"type:float(10,6);not null"`
 	Longitude       float64   `json:"longitude" gorm:"type:float(10,6);not null"`
-	StatusAccount   string    `json:"-" json:"-" gorm:"type:enum('blocked', 'inactive', 'active');not null"`
-	AccountNumber   string    `gorm:""`
-	AccountNumberID uuid.UUID `gorm:""`
+	StatusAccount   string    `json:"-" gorm:"type:enum('blocked', 'inactive', 'active');not null"`
+	AccountNumber   string    `json:"account_number" gorm:""`
+	AccountNumberID uuid.UUID `json:"account_number_id" gorm:""`
 	UrlPhotoProfile string    `json:"url_photo_profile" gorm:"type:varchar(255);not null"`
 	CreatedAt       int64     `json:"-" gorm:"autoCreateTime:milli;not null"`
 	UpdatedAt       int64     `json:"-" gorm:"autoCreateTime:milli;autoUpdateTime:milli;not null"`
