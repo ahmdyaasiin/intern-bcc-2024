@@ -237,7 +237,7 @@ func generateTransaction(db *gorm.DB) error {
 					ProductID:      products[i].ID,
 					MidtransID:     uuid.New(),
 					Amount:         products[i].Price,
-					Status:         "success",
+					Status:         "paid",
 					WithdrawalCode: mail.GenerateSixCode(),
 				},
 			)
