@@ -7,6 +7,7 @@ import (
 	"intern-bcc-2024/model"
 	"intern-bcc-2024/pkg/response"
 	"intern-bcc-2024/pkg/validation"
+	"log"
 )
 
 func (r *Rest) BuyProduct(ctx *gin.Context) {
@@ -148,4 +149,10 @@ func (r *Rest) AcceptTransaction(ctx *gin.Context) {
 	}
 
 	response.MessageOnly(ctx, 200, "Success withdraw transaction")
+}
+
+func (r *Rest) DeleteExpiredTransaction() {
+	log.Println("goCron is working")
+
+	r.service.TransactionService.DeleteExpiredTransaction()
 }

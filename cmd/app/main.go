@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/jasonlvhit/gocron"
 	"intern-bcc-2024/internal/handler/rest"
 	"intern-bcc-2024/internal/repository"
 	"intern-bcc-2024/internal/service"
@@ -28,5 +29,11 @@ func main() {
 
 	r := rest.NewRest(srvc, mw)
 	r.MountEndpoint()
+
+	go func() {
+		gocron.Every(1).Minutes().Do(r.DeleteExpiredTransaction)
+		<-gocron.Start()
+	}()
+
 	r.Run()
 }

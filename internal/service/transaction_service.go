@@ -15,6 +15,7 @@ import (
 	md "intern-bcc-2024/pkg/midtrans"
 	"intern-bcc-2024/pkg/response"
 	"log"
+	"time"
 )
 
 type ITransactionService interface {
@@ -24,6 +25,7 @@ type ITransactionService interface {
 	CancelTransaction(ctx *gin.Context, idTransaction uuid.UUID, requestTransactionID uuid.UUID) response.Details
 	RefuseTransaction(ctx *gin.Context, id uuid.UUID, requests model.RequestForRefuseTransaction) response.Details
 	AcceptTransaction(ctx *gin.Context, id uuid.UUID, requests model.RequestForWithdrawTransaction) response.Details
+	DeleteExpiredTransaction()
 }
 
 type TransactionService struct {
@@ -373,4 +375,41 @@ func (ts *TransactionService) AcceptTransaction(ctx *gin.Context, id uuid.UUID, 
 	}
 
 	return response.Details{Code: 200, Message: "Success accept the transaction", Error: nil}
+}
+
+func (ts *TransactionService) DeleteExpiredTransaction() {
+	tx := ts.db.Begin()
+	defer tx.Rollback()
+
+	uRowsAffected, respDetails := ts.trr.BulkDelete(tx, "unpaid", time.Now().Add(-5*time.Minute).Local().UnixMilli())
+	if respDetails.Error != nil {
+		log.Println(respDetails.Error)
+		return
+	}
+
+	pRowsAffected, respDetails := ts.trr.BulkDelete(tx, "paid", time.Now().Add(-7*24*time.Hour).Local().UnixMilli())
+	if respDetails.Error != nil {
+		log.Println(respDetails.Error)
+		return
+	}
+
+	if err := tx.Commit().Error; err != nil {
+		log.Println(err)
+
+		return
+	}
+
+	if uRowsAffected != 0 || pRowsAffected != 0 {
+		if uRowsAffected != 0 {
+			log.Println(fmt.Sprintf("Success delete %d unpaid status", uRowsAffected))
+		}
+
+		if pRowsAffected != 0 {
+			log.Println(fmt.Sprintf("Success delete %d paid status", pRowsAffected))
+		}
+
+	} else {
+		log.Println("No rows are deleted")
+	}
+
 }

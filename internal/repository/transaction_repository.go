@@ -13,6 +13,7 @@ type ITransactionRepository interface {
 	Update(tx *gorm.DB, transaction *entity.Transaction) response.Details
 	Delete(tx *gorm.DB, transaction *entity.Transaction) response.Details
 	FindActiveTransactions(tx *gorm.DB, transaction *[]model.ResponseForActiveTransactions, user entity.User) response.Details
+	BulkDelete(tx *gorm.DB, status string, createdAt int64) (int64, response.Details)
 }
 
 type TransactionRepository struct {
@@ -61,4 +62,13 @@ func (tr *TransactionRepository) FindActiveTransactions(tx *gorm.DB, transaction
 	}
 
 	return response.Details{Code: 200, Message: "Success to get active transactions"}
+}
+
+func (tr *TransactionRepository) BulkDelete(tx *gorm.DB, status string, createdAt int64) (int64, response.Details) {
+	result := tx.Where("status = ? AND ? > created_at", status, createdAt).Delete(entity.Transaction{})
+
+	if result.Error != nil {
+		return 0, response.Details{Code: 500, Message: "Failed to delete expired transaction", Error: result.Error}
+	}
+	return result.RowsAffected, response.Details{Code: 200, Message: "Success to delete expired transaction", Error: nil}
 }
