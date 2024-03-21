@@ -66,16 +66,11 @@ func generateUser(db *gorm.DB) error {
 		providerCode := []string{"812", "857", "859"}
 
 		var accountType *entity.AccountNumberType
-		if err = db.Order("RAND()").Limit(1).First(&accountType).Error; err != nil {
+		if err = db.Where("name != 'Default'").Order("RAND()").Limit(1).First(&accountType).Error; err != nil {
 			return err
 		}
 
-		// default account number and accountType after register
-		accountNumber := "0"
-		if accountType.Name != "Default" {
-			accountNumber = fmt.Sprintf("62%s%s", providerCode[randRange(0, len(providerCode)-1)], strconv.Itoa(randRange(11111111, 99999999)))
-		}
-
+		accountNumber := fmt.Sprintf("62%s%s", providerCode[randRange(0, len(providerCode)-1)], strconv.Itoa(randRange(11111111, 99999999)))
 		user := &entity.User{
 			ID:              uuid.New(),
 			Name:            fullName,
