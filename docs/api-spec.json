@@ -3,7 +3,7 @@
   "info": {
     "title": "Bekas.an - Open API",
     "description": "Description of the API",
-    "version": "2.1.1"
+    "version": "2.1.2"
   },
   "servers": [
     {
@@ -2434,7 +2434,10 @@
                     "type": "string",
                     "format": "file"
                   }
-                }
+                },
+                "required": [
+                  "name", "description", "price", "category", "old_photo", "photo"
+                ]
               }
             }
           }
