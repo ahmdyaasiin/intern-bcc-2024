@@ -10,11 +10,6 @@ import (
 	"strings"
 )
 
-type ErrorMsg struct {
-	Field   string `json:"field"`
-	Message string `json:"message"`
-}
-
 var SecureDomain validator.Func = func(fl validator.FieldLevel) bool {
 	if email, ok := fl.Field().Interface().(string); ok {
 		domain := strings.Split(email, "@")[1]
