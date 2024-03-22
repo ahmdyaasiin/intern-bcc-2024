@@ -2,15 +2,6 @@ package model
 
 import "github.com/google/uuid"
 
-type ParamForFind struct {
-	ID        uuid.UUID
-	UserID    uuid.UUID
-	ProductID uuid.UUID
-	Email     string
-	Token     string
-	Name      string
-}
-
 /*
 	@ Request Struct
 */
@@ -53,7 +44,7 @@ type RequestForChangePassword struct {
 }
 
 /*
-	@ Response Struct
+	Response Struct
 */
 
 type ResponseForRegister struct {
@@ -68,14 +59,4 @@ type ResponseForLogin struct {
 
 type ResponseForRenew struct {
 	AccessToken string `json:"access_token"`
-}
-
-type ResponseForMyData struct {
-	ID              uuid.UUID `json:"id"`
-	Name            string    `json:"name"`
-	Email           string    `json:"email"`
-	Address         string    `json:"address"`
-	Latitude        float64   `json:"latitude"`
-	Longitude       float64   `json:"longitude"`
-	UrlPhotoProfile string    `json:"url_photo_profile"`
 }

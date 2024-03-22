@@ -1,6 +1,13 @@
 package model
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+	"mime/multipart"
+)
+
+/*
+	Request Struct
+*/
 
 type RequestForSearch struct {
 	Query     string
@@ -14,6 +21,38 @@ type RequestForSearch struct {
 	Offset    int
 }
 
+type RequestForAddProduct struct {
+	Category    string                `form:"category" binding:"required"`
+	Name        string                `form:"name" binding:"required"`
+	Description string                `form:"description" binding:"required"`
+	Price       string                `form:"price" binding:"required"`
+	Photo       *multipart.FileHeader `form:"photo" binding:"required"`
+}
+
+/*
+	Response Struct
+*/
+
+type ResponseSearch struct {
+	Product  *[]ResponseForSearch   `json:"products"`
+	Category *[]ResponseForHomePage `json:"categories"`
+}
+
+type ResponseForActiveProducts struct {
+	TransactionID uuid.UUID `json:"transaction_id"`
+	ProductID     string    `json:"product_id"`
+	ProductName   string    `json:"product_name"`
+	ProductPrice  string    `json:"product_price"`
+	CancelCode    string    `json:"cancel_code"`
+	UrlProduct    string    `json:"url_product"`
+	BuyerName     string    `json:"buyer_name"`
+}
+
+type ResponseForGetProductByIDOwner struct {
+	Product    ResponseForProductForIDOwner `json:"product"`
+	Categories *[]ResponseForHomePage       `json:"categories"`
+}
+
 type ResponseForSearch struct {
 	ProductID       uuid.UUID `json:"product_id"`
 	ProductName     string    `json:"product_name"`
@@ -22,11 +61,6 @@ type ResponseForSearch struct {
 	OwnerID         uuid.UUID `json:"owner_id"`
 	OwnerName       string    `json:"owner_name"`
 	OwnerDistance   string    `json:"owner_distance"`
-}
-
-type ResponseSearch struct {
-	Product  *[]ResponseForSearch   `json:"products"`
-	Category *[]ResponseForHomePage `json:"categories"`
 }
 
 type ResponseForGetProductByID struct {
@@ -41,20 +75,12 @@ type ResponseForGetProductByID struct {
 	OwnerPhotoProfile  string    `json:"owner_photo_profile"`
 }
 
-type ResponseForGetProductByIDOwner struct {
-	ProductID          uuid.UUID `json:"product_id"`
-	ProductName        string    `json:"product_name"`
-	ProductDescription string    `json:"product_description"`
-	ProductPrice       uint64    `json:"product_price"`
-	Media              []string  `json:"media"`
-}
-
-type ResponseForActiveProducts struct {
-	TransactionID uuid.UUID `json:"transaction_id"`
-	ProductID     string    `json:"product_id"`
-	ProductName   string    `json:"product_name"`
-	ProductPrice  string    `json:"product_price"`
-	CancelCode    string    `json:"cancel_code"`
-	UrlProduct    string    `json:"url_product"`
-	OwnerName     string    `json:"owner_name"`
+type ResponseForProductForIDOwner struct {
+	ID           uuid.UUID `json:"id"`
+	Name         string    `json:"name"`
+	Description  string    `json:"description"`
+	Price        uint64    `json:"price"`
+	Media        []string  `json:"media"`
+	CategoryID   uuid.UUID `json:"category_id"`
+	CategoryName string    `json:"category_name"`
 }

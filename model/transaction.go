@@ -2,17 +2,9 @@ package model
 
 import "github.com/google/uuid"
 
-type ResponseForBuyProduct struct {
-	PaymentID string `json:"payment_id"`
-}
-
-type PaymentNotificationHandler struct {
-	OrderID uuid.UUID `json:"order_id" binding:"required"`
-}
-
-type RequestForCancelTransaction struct {
-	TransactionID uuid.UUID `json:"transaction_id" binding:"required"`
-}
+/*
+	Request Struct
+*/
 
 type RequestForRefuseTransaction struct {
 	CancelCode string `json:"cancel_code" binding:"required"`
@@ -20,6 +12,18 @@ type RequestForRefuseTransaction struct {
 
 type RequestForWithdrawTransaction struct {
 	WithdrawCode string `json:"withdraw_code" binding:"required"`
+}
+
+type RequestForPaymentNotificationHandler struct {
+	OrderID uuid.UUID `json:"order_id" binding:"required"`
+}
+
+/*
+	Response Struct
+*/
+
+type ResponseForBuyProduct struct {
+	PaymentID string `json:"payment_id"`
 }
 
 type ResponseForActiveTransactions struct {
