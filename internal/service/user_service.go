@@ -168,6 +168,15 @@ func (us *UserService) VerifyAfterRegister(requests model.RequestForVerify) resp
 		return response.Details{Code: 401, Message: "Verification code is expired", Error: errors.New("verification code is expired")}
 	}
 
+	respDetails = us.ur.Find(tx, user, model.ParamForFind{
+		ID: requests.UserID,
+	})
+	if respDetails.Error != nil {
+		log.Println(respDetails.Error)
+
+		return respDetails
+	}
+
 	user.StatusAccount = "active"
 	respDetails = us.ur.Update(tx, user)
 	if respDetails.Error != nil {

@@ -38,7 +38,7 @@ func (ur *UserRepository) Create(tx *gorm.DB, user *entity.User) response.Detail
 }
 
 func (ur *UserRepository) Update(tx *gorm.DB, user *entity.User) response.Details {
-	if err := tx.Debug().Updates(user).Error; err != nil {
+	if err := tx.Debug().Where("id = ?", user.ID).Updates(&user).Error; err != nil {
 		return response.Details{Code: 500, Message: "Data pengguna gagal diperbarui", Error: err}
 	}
 
