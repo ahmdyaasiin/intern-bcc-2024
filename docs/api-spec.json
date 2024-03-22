@@ -1,0 +1,3321 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Bekas.an - Open API",
+    "description": "Description of the API",
+    "version": "2.1.1"
+  },
+  "servers": [
+    {
+      "url": "/api/v1"
+    }
+  ],
+  "paths": {
+    "/status": {
+      "get": {
+        "description": "",
+        "tags": [
+          "Server Status"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Server OK!"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "description": "",
+        "tags": [
+          "User Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "name": "John Doe",
+                "email": "johndoe@example.com",
+                "password": "password_john_doe",
+                "confirm_password": "password_john_doe",
+                "address": "Jl. Veteran, Ketawanggede, Kec. Lowokwaru, Kota Malang, Jawa Timur 65145",
+                "latitude": -7.95217615839509,
+                "longitude": 112.61271625437
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 18
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "maxLength": 64
+                  },
+                  "confirm_password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "maxLength": 64
+                  },
+                  "address": {
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "name", "email", "password", "confirm_password", "address", "latitude", "longitude"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "User berhasil didaftarkan",
+                  "data": {
+                    "id": "29e01718-dc8b-11ee-8924-325096b39f47"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Email telah terdaftar"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kesalahan validasi",
+                  "errors": {
+                    "name": "Name tidak boleh kosong",
+                    "email": "Email tidak boleh kosong",
+                    "password": "Password tidak boleh kosong",
+                    "confirm_password": "Confirm password tidak boleh kosong",
+                    "address": "Address tidak boleh kosong",
+                    "latitude": "Latitude tidak boleh kosong",
+                    "longitude": "Longitude tidak boleh kosong"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    },
+                    "confirm_password": {
+                      "type": "string"
+                    },
+                    "address": {
+                      "type": "string"
+                    },
+                    "latitude": {
+                      "type": "string"
+                    },
+                    "longitude": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "",
+        "tags": [
+          "User Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": "29e01718-dc8b-11ee-8924-325096b39f47",
+                "verification_code": "612725"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "verification_code": {
+                    "type": "string",
+                    "minLength": 6,
+                    "maxLength": 6
+                  }
+                },
+                "required": [
+                  "id", "verification_code"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "User berhasil diverifikasi"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Verification code salah"
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Verification code kadaluwarsa"
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kesalahan validasi",
+                  "errors": {
+                    "id": "Id tidak boleh kosong",
+                    "verification_code": "Verification code tidak boleh kosong"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "verification_code": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/register/resend": {
+      "patch": {
+        "description": "",
+        "tags": [
+          "User Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "id": "29e01718-dc8b-11ee-8924-325096b39f47"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kode OTP berhasil dikirimkan"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Verified": {
+                    "value": {
+                      "message": "User sudah diverifikasi sebelumnya"
+                    }
+                  },
+                  "Limit": {
+                    "value": {
+                      "message": "Tolong tunggu 5 menit lagi"
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kesalahan validasi",
+                  "errors": {
+                    "id": "Id tidak boleh kosong"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "description": "",
+        "tags": [
+          "User Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "email": "johndoe@example.com",
+                "password": "password_john_doe"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "maxLength": 64
+                  }
+                },
+                "required": [
+                  "email", "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "User berhasil masuk",
+                  "data": {
+                    "access_token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyOWUwMTcxOC1kYzhiLTExZWUtODkyNC0zMjUwOTZiMzlmNDciLCJuYW1lIjoiSm9obiBEb2UiLCJleHBpcmVkX2F0IjoiMTcwOTgzNTk3OCJ9.NH56MkP0aJeYyRqPbOqo-VuMBFq_ADkAEuwPqUxY0Z4",
+                    "refresh_token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyOWUwMTcxOC1kYzhiLTExZWUtODkyNC0zMjUwOTZiMzlmNDciLCJuYW1lIjoiSm9obiBEb2UiLCJleHBpcmVkX2F0IjoiMTcwOTgzNjAxMSJ9.GM2fIW0Pcw4aAbjxN3kCap50l0YmA7DiWS-SySLfj7c"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "access_token": {
+                          "type": "string"
+                        },
+                        "refresh_token": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Email atau password tidak benar"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Unverified": {
+                    "value": {
+                      "message" : "Tolong verifikasi akun anda terlebih dahulu",
+                      "data": {
+                        "id": "29e01718-dc8b-11ee-8924-325096b39f47"
+                      }
+                    }
+                  },
+                  "Blocked": {
+                    "value": {
+                      "message": "User diblokir"
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kesalahan validasi",
+                  "errors": {
+                    "email": "Email tidak boleh kosong",
+                    "password": "Password tidak boleh kosong"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string"
+                        },
+                        "password": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/my-data": {
+      "get": {
+        "description": "",
+        "tags": [
+          "User Authentication"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil mengambil data user",
+                  "data": {
+                    "id": "205c62de-2582-4839-8b1a-83449825d39c",
+                    "name": "John Doe",
+                    "email": "john doe@student.ub.ac.id",
+                    "address": "Jl. Veteran, Ketawanggede, Kec. Lowokwaru, Kota Malang, Jawa Timur 65145",
+                    "latitude": -7.944073,
+                    "longitude": 112.61166,
+                    "account_number": "6285735705658",
+                    "account_number_id": "251b32eb-11a7-42a7-b19f-91c1c2d85d04",
+                    "url_photo_profile": "https://randomuser.me/api/portraits/men/55.jpg"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "email": {
+                          "type": "string",
+                          "format": "email"
+                        },
+                        "address": {
+                          "type": "string"
+                        },
+                        "latitude": {
+                          "type": "number"
+                        },
+                        "longitude": {
+                          "type": "number"
+                        },
+                        "url_photo_profile": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token tidak valid",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "delete": {
+        "description": "",
+        "tags": [
+          "User Authentication"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "User berhasil keluar"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token tidak valid",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/renew-access-token": {
+      "post": {
+        "description": "",
+        "tags": [
+          "User Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiI3NjIxMzQ4NS02OWFhLTQyZmItYTgwYS0yOWFmOTQ2ZGNjZGQiLCJleHAiOjE3MTAyMjI3NzJ9.OHo5tmdYMWpJOjaKXlYU4lflL0uw5l6q3pLwj44YJYU"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refresh_token": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "refresh_token"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil memperbarui access token",
+                  "data": {
+                    "access_token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyOWUwMTcxOC1kYzhiLTExZWUtODkyNC0zMjUwOTZiMzlmNDciLCJuYW1lIjoiSm9obiBEb2UiLCJleHBpcmVkX2F0IjoiMTcwOTgzNjI2OCJ9.5pQENPclbMya8-tW_31cWbhNmPlAYglTRGLMRhRsHJs"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "access_token": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Refresh token tidak valid",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kesalahan validasi",
+                  "errors": {
+                    "id": "Id tidak boleh kosong"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/reset": {
+      "post": {
+        "description": "",
+        "tags": [
+          "User Authentication"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "email": "johndoe@example.com"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                },
+                "required": [
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil mengirimkan link reset password"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Tolong tunggu 5 menit lagi"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kesalahan validasi",
+                  "errors": {
+                    "email": "Email tidak boleh kosong"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "email": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/reset/{token}":{
+      "get": {
+        "description": "",
+        "tags": [
+          "User Authentication"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Token benar"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "",
+        "tags": [
+          "User Authentication"
+        ],
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "password": "new_password_john_doe",
+                "confirm_password": "new_password_john_doe"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string"
+                  },
+                  "confirm_password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "password", "confirm_password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Password berhasil diubah"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kesalahan validasi",
+                  "errors": {
+                    "password": "Password tidak boleh kosong",
+                    "confirm_password": "Confirm password tidak boleh kosong"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "password": {
+                          "type": "string"
+                        },
+                        "confirm_password": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/profile/account_number": {
+      "get": {
+        "description": "",
+        "tags": [
+          "User Profile"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Success get account number",
+                  "data": [
+                    {
+                      "id": "251b32eb-11a7-42a7-b19f-91c1c2d85d04",
+                      "name": "Shopeepay"
+                    },
+                    {
+                      "id": "f8d76bff-42b2-4798-9f71-65dac6f1d521",
+                      "name": "Gopay"
+                    }
+                  ]
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "",
+        "tags": [
+          "User Profile"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "account_number_type_id": "",
+                "account_number": ""
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "account_number_type_id": {
+                    "type": "string"
+                  },
+                  "account_number": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Success update account number"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/product/homepage": {
+      "get": {
+        "description": "",
+        "tags": [
+          "Find Product"
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil mendapatkan semua category",
+                  "data": [
+                    {
+                      "id": "553bf102-0fcd-402b-a8fc-afce26b4d0ea",
+                      "name": "Kendaraan",
+                      "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Kendaraan-0m31a5v9glcmxp5mmcyrzoj2kmg7dk.png",
+                      "total_product": 9
+                    },
+                    {
+                      "id": "63ce60db-51a9-471a-94ae-8ffe2c193ac9",
+                      "name": "Perlengkapan Kuliah",
+                      "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Perlengkapan%20Kuliah-t3d7leouhijnr5ya6076iv5d848uaz.png",
+                      "total_product": 6
+                    },
+                    {
+                      "id": "842e657b-58ed-4132-a050-794d10a23e8a",
+                      "name": "Perabotan dan Dekorasi Kamar",
+                      "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Perabotan%20dan%20Dekorasi%20Kamar-1mxhxw7rr7zj5zwaxl7uv3srfsa5lb.png",
+                      "total_product": 9
+                    },
+                    {
+                      "id": "8990f7de-0524-449c-be5e-57f449e618a9",
+                      "name": "Buku dan Bahan Ajar",
+                      "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Buku%20dan%20Bahan%20Ajar-ich0womggrlxuskvowtvd7kpsf0c0p.png",
+                      "total_product": 6
+                    },
+                    {
+                      "id": "a1fc959e-519b-4b72-a104-e91f564d9686",
+                      "name": "Alat Tulis dan Perlengkapan kantor",
+                      "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Alat%20Tulis%20dan%20Perlengkapan%20Kantor-6mqpkyophszmho2vgs3fd3i8y6ydw1.png",
+                      "total_product": 8
+                    },
+                    {
+                      "id": "a60ccebc-b060-4bbc-9238-8f5119d68b20",
+                      "name": "Pakaian dan Aksesoris",
+                      "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Pakaian%20dan%20Aksesoris-bujd1dny936mccqqtsg5bgdbkjrd5p.png",
+                      "total_product": 18
+                    },
+                    {
+                      "id": "b09526b0-4855-4e53-99d9-d19ed52e115e",
+                      "name": "Elektronik",
+                      "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Elektronik-cgenk5n1n80qwtzi28uh4doufb64kq.png",
+                      "total_product": 19
+                    },
+                    {
+                      "id": "e30f0db0-ef0c-4fbf-85eb-8cd48853bb69",
+                      "name": "Kesehatan dan Kecantikan",
+                      "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/kesehatan%20dan%20Kecantikan-izqrjov5jfw7aoa2hug8stgnpbuon5.png",
+                      "total_product": 6
+                    }
+                  ]
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "url_category": {
+                            "type": "string"
+                          },
+                          "total_product": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/product/search": {
+      "get": {
+        "description": "",
+        "tags": [
+          "Find Product"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "query",
+            "in": "path"
+          },
+          {
+            "name": "category",
+            "in": "path"
+          },
+          {
+            "name": "sort",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "enum": ["default", "distance", "price"],
+              "default": "default"
+            }
+          },
+          {
+            "name": "page",
+            "in": "path",
+            "schema": {
+              "type": "integer",
+              "default": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil mendapatkan produk",
+                  "data": {
+                    "products": [
+                      {
+                        "product_id": "ffe9584e-71ae-4109-97c6-2d3e59fb84a9",
+                        "product_name": "PRELOVED SKINTIFIC TONER",
+                        "product_price": 85000,
+                        "url_photo_product": "https://down-id.img.susercontent.com/file/id-11134207-7r98x-lrazcf51eds65f",
+                        "owner_id": "916e54db-7665-4100-b0b1-128004213cac",
+                        "owner_name": "Nyasia Stroman",
+                        "owner_distance": "913.2399081122774"
+                      },
+                      {
+                        "product_id": "f07673e0-5ea9-4dbd-98df-b68be0c56bb8",
+                        "product_name": "Mobil Bekas Toyota Agya (2016)1.0 G BENSIN-MT",
+                        "product_price": 48500000,
+                        "url_photo_product": "https://down-id.img.susercontent.com/file/id-11134207-7r98r-lohr2n7iy36x45",
+                        "owner_id": "916e54db-7665-4100-b0b1-128004213cac",
+                        "owner_name": "Nyasia Stroman",
+                        "owner_distance": "913.2399081122774"
+                      },
+                      {
+                        "product_id": "6deedd0c-3b6c-4674-b26e-68d57f5bfec3",
+                        "product_name": "kursi hidrolik donati kursi kerja kursi belajar kursi komputer",
+                        "product_price": 370000,
+                        "url_photo_product": "https://images.tokopedia.net/img/cache/900/VqbcmM/2024/3/5/f31c3c5b-7e5d-4992-8481-e10e547a9a0c.jpg",
+                        "owner_id": "916e54db-7665-4100-b0b1-128004213cac",
+                        "owner_name": "Nyasia Stroman",
+                        "owner_distance": "913.2399081122774"
+                      },
+                      {
+                        "product_id": "5ccff243-7947-4be9-9c25-dd0aabec02dd",
+                        "product_name": "Rak Buku Rak Susun 3",
+                        "product_price": 152000,
+                        "url_photo_product": "https://images.tokopedia.net/img/cache/900/product-1/2019/9/4/6742093/6742093_b2756e48-1aa0-4a85-99a7-08f89675cd0d_1560_1560.jpg",
+                        "owner_id": "aadc0d6c-2a8b-40fd-bea5-0ec187a9e8e5",
+                        "owner_name": "Nicholaus Kovacek",
+                        "owner_distance": "1012.8379199147453"
+                      },
+                      {
+                        "product_id": "27e640f3-22b1-484d-a0c9-949a69c44fe0",
+                        "product_name": "jaket harley davidson bekas",
+                        "product_price": 450000,
+                        "url_photo_product": "https://images.tokopedia.net/img/cache/500-square/VqbcmM/2023/2/10/0cf48ae6-60b6-457a-9e85-1e437e7f7640.jpg.webp?ect=4g",
+                        "owner_id": "f43dc4bd-ae09-4a34-97b8-a9ccdf4b26a9",
+                        "owner_name": "Rodrick Wunsch",
+                        "owner_distance": "1111.9693858054825"
+                      }
+                    ],
+                    "categories": [
+                      {
+                        "id": "553bf102-0fcd-402b-a8fc-afce26b4d0ea",
+                        "name": "Kendaraan",
+                        "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Kendaraan-0m31a5v9glcmxp5mmcyrzoj2kmg7dk.png",
+                        "total_product": 9
+                      },
+                      {
+                        "id": "63ce60db-51a9-471a-94ae-8ffe2c193ac9",
+                        "name": "Perlengkapan Kuliah",
+                        "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Perlengkapan%20Kuliah-t3d7leouhijnr5ya6076iv5d848uaz.png",
+                        "total_product": 6
+                      },
+                      {
+                        "id": "842e657b-58ed-4132-a050-794d10a23e8a",
+                        "name": "Perabotan dan Dekorasi Kamar",
+                        "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Perabotan%20dan%20Dekorasi%20Kamar-1mxhxw7rr7zj5zwaxl7uv3srfsa5lb.png",
+                        "total_product": 9
+                      },
+                      {
+                        "id": "8990f7de-0524-449c-be5e-57f449e618a9",
+                        "name": "Buku dan Bahan Ajar",
+                        "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Buku%20dan%20Bahan%20Ajar-ich0womggrlxuskvowtvd7kpsf0c0p.png",
+                        "total_product": 6
+                      },
+                      {
+                        "id": "a1fc959e-519b-4b72-a104-e91f564d9686",
+                        "name": "Alat Tulis dan Perlengkapan kantor",
+                        "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Alat%20Tulis%20dan%20Perlengkapan%20Kantor-6mqpkyophszmho2vgs3fd3i8y6ydw1.png",
+                        "total_product": 8
+                      },
+                      {
+                        "id": "a60ccebc-b060-4bbc-9238-8f5119d68b20",
+                        "name": "Pakaian dan Aksesoris",
+                        "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Pakaian%20dan%20Aksesoris-bujd1dny936mccqqtsg5bgdbkjrd5p.png",
+                        "total_product": 18
+                      },
+                      {
+                        "id": "b09526b0-4855-4e53-99d9-d19ed52e115e",
+                        "name": "Elektronik",
+                        "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Elektronik-cgenk5n1n80qwtzi28uh4doufb64kq.png",
+                        "total_product": 19
+                      },
+                      {
+                        "id": "e30f0db0-ef0c-4fbf-85eb-8cd48853bb69",
+                        "name": "Kesehatan dan Kecantikan",
+                        "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/kesehatan%20dan%20Kecantikan-izqrjov5jfw7aoa2hug8stgnpbuon5.png",
+                        "total_product": 6
+                      }
+                    ]
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "products": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "product_id": {
+                                "type": "string"
+                              },
+                              "product_name": {
+                                "type": "string"
+                              },
+                              "product_price": {
+                                "type": "integer"
+                              },
+                              "url_photo_product": {
+                                "type": "string"
+                              },
+                              "owner_id": {
+                                "type": "string"
+                              },
+                              "owner_name": {
+                                "type": "string"
+                              },
+                              "owner_distance": {
+                                "type": "number"
+                              }
+                            }
+                          }
+                        },
+                        "categories": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "url_category": {
+                                "type": "string"
+                              },
+                              "total_product": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kesalahan validasi",
+                  "errors": {
+                    "filter_by": "Jenis filter tidak ditemukan",
+                    "category": "Kategori tidak boleh kosong",
+                    "sort": "Sort hanya bisa ASC atau DESC",
+                    "page": "Page harus bernilai positif"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "filter_by": {
+                          "type": "string"
+                        },
+                        "category": {
+                          "type": "string"
+                        },
+                        "sort": {
+                          "type": "string"
+                        },
+                        "page": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/product/detail/{id}": {
+      "get": {
+        "description": "",
+        "tags": [
+          "Find Product"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil mendapatkan produk",
+                  "data": {
+                    "product_id": "ffe9584e-71ae-4109-97c6-2d3e59fb84a9",
+                    "product_name": "PRELOVED SKINTIFIC TONER",
+                    "product_description": "baru beli dan 2X pemakaian (isi masih banyak) sesuai pict",
+                    "product_price": 85000,
+                    "media": [
+                      "https://down-id.img.susercontent.com/file/id-11134207-7r98x-lrazcf51eds65f",
+                      "https://down-id.img.susercontent.com/file/id-11134207-7r98p-lrazcf51cz7qb1"
+                    ],
+                    "owner_id": "916e54db-7665-4100-b0b1-128004213cac",
+                    "owner_name": "Nyasia Stroman",
+                    "owner_distance": "2458.899043390019",
+                    "owner_photo_profile": "https://randomuser.me/api/portraits/men/52.jpg"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "product_id": {
+                          "type": "string"
+                        },
+                        "product_name": {
+                          "type": "string"
+                        },
+                        "product_description": {
+                          "type": "string"
+                        },
+                        "product_price": {
+                          "type": "integer"
+                        },
+                        "media": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "owner_id": {
+                          "type": "string"
+                        },
+                        "owner_name": {
+                          "type": "string"
+                        },
+                        "owner_distance": {
+                          "type": "number"
+                        },
+                        "owner_photo_profile": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/product": {
+      "post": {
+        "description": "",
+        "tags": [
+          "Manage Product"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "photo": {
+                    "type": "string",
+                    "format": "file"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "photo", "name", "description", "price", "category"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil menambahkan produk"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kesalahan validasi",
+                  "errors": {
+                    "name": "Name tidak boleh kosong",
+                    "description": "Description tidak boleh kosong",
+                    "price": "Price tidak boleh kosong",
+                    "category": "Category tidak boleh kosong",
+                    "photo": "Photo tidak boleh kosong"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "price": {
+                          "type": "string"
+                        },
+                        "category": {
+                          "type": "string"
+                        },
+                        "photo": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/product/{id}" : {
+      "get": {
+        "description": "",
+        "tags": [
+          "Manage Product"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil mendapatkan produk",
+                  "data": {
+                    "product": {
+                      "id": "00fd63a0-5f6d-481b-8e27-93d4f49fb336",
+                      "name": "preloved KETTLER Mini Fitness Alat Olahraga Kaki",
+                      "description": "produk asli merk Kettler",
+                      "price": 150000,
+                      "media": [
+                        "https://down-id.img.susercontent.com/file/id-11134207-7r98v-ls7yx7gightg1c",
+                        "https://down-id.img.susercontent.com/file/id-11134207-7r98u-ls7yx7gihwn1c4",
+                        "https://down-id.img.susercontent.com/file/id-11134207-7r98u-ls7yx7gighy179"
+                      ],
+                      "category_id": "e30f0db0-ef0c-4fbf-85eb-8cd48853bb69",
+                      "category_name": "Kesehatan dan Kecantikan"
+                    },
+                    "categories": [
+                      {
+                        "id": "553bf102-0fcd-402b-a8fc-afce26b4d0ea",
+                        "name": "Kendaraan",
+                        "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Kendaraan-0m31a5v9glcmxp5mmcyrzoj2kmg7dk.png",
+                        "total_product": 9
+                      },
+                      {
+                        "id": "63ce60db-51a9-471a-94ae-8ffe2c193ac9",
+                        "name": "Perlengkapan Kuliah",
+                        "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Perlengkapan%20Kuliah-t3d7leouhijnr5ya6076iv5d848uaz.png",
+                        "total_product": 6
+                      },
+                      {
+                        "id": "842e657b-58ed-4132-a050-794d10a23e8a",
+                        "name": "Perabotan dan Dekorasi Kamar",
+                        "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Perabotan%20dan%20Dekorasi%20Kamar-1mxhxw7rr7zj5zwaxl7uv3srfsa5lb.png",
+                        "total_product": 9
+                      },
+                      {
+                        "id": "8990f7de-0524-449c-be5e-57f449e618a9",
+                        "name": "Buku dan Bahan Ajar",
+                        "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Buku%20dan%20Bahan%20Ajar-ich0womggrlxuskvowtvd7kpsf0c0p.png",
+                        "total_product": 6
+                      },
+                      {
+                        "id": "a1fc959e-519b-4b72-a104-e91f564d9686",
+                        "name": "Alat Tulis dan Perlengkapan kantor",
+                        "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Alat%20Tulis%20dan%20Perlengkapan%20Kantor-6mqpkyophszmho2vgs3fd3i8y6ydw1.png",
+                        "total_product": 8
+                      },
+                      {
+                        "id": "a60ccebc-b060-4bbc-9238-8f5119d68b20",
+                        "name": "Pakaian dan Aksesoris",
+                        "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Pakaian%20dan%20Aksesoris-bujd1dny936mccqqtsg5bgdbkjrd5p.png",
+                        "total_product": 18
+                      },
+                      {
+                        "id": "b09526b0-4855-4e53-99d9-d19ed52e115e",
+                        "name": "Elektronik",
+                        "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/Elektronik-cgenk5n1n80qwtzi28uh4doufb64kq.png",
+                        "total_product": 18
+                      },
+                      {
+                        "id": "e30f0db0-ef0c-4fbf-85eb-8cd48853bb69",
+                        "name": "Kesehatan dan Kecantikan",
+                        "url_category": "https://hpmvwwpbkmlzqfmmbjbd.supabase.co/storage/v1/object/public/intern-bcc-2024/Categories/kesehatan%20dan%20Kecantikan-izqrjov5jfw7aoa2hug8stgnpbuon5.png",
+                        "total_product": 6
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "",
+        "tags": [
+          "Buy Product"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil membeli produk, silakan bayar",
+                  "data": {
+                    "payment_id": "f1b56697-e188-4661-8980-7651894d710e"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "payment_id": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "description": "",
+        "tags": [
+          "Manage Product"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "old_photo": {
+                    "type": "string"
+                  },
+                  "photo": {
+                    "type": "string",
+                    "format": "file"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Success update the product"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "tags": [
+          "Manage Product"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil menghapus produk"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Anda bukan pemilik produk ini"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/product/{id}/callback" : {
+      "post": {
+        "description": "",
+        "tags": [
+          "Buy Product"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "order_id": "6eb31f9e-63eb-4b11-a81a-4b44fd97ebee"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "order_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Pembayaran berhasil"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Kesalahan validasi",
+                  "errors": {
+                    "order_id": "Order id tidak boleh kosong"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "errors": {
+                      "type": "object",
+                      "properties": {
+                        "password": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/transaction/buy-list": {
+      "get": {
+        "description": "",
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil mendapatkan list transaksi yang harus segera dilakukan COD",
+                  "data": [
+                    {
+                      "transaction_id": "d3a5f75f-d2ca-4c6f-8545-2a498633a842",
+                      "product_id": "3d6d32e1-e4c4-4ae5-8318-cfb95027a0d2",
+                      "product_name": "HONDA MOBILIO THN 2019",
+                      "product_price": "35000000",
+                      "withdrawal_code": "186313",
+                      "url_product": "https://down-id.img.susercontent.com/file/id-11134207-7r992-logjfarxvpzu34",
+                      "owner_name": "Milton Brown"
+                    }
+                  ]
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "product_id": {
+                            "type": "string"
+                          },
+                          "product_name": {
+                            "type": "string"
+                          },
+                          "amount": {
+                            "type": "string"
+                          },
+                          "withdrawal_code": {
+                            "type": "string"
+                          },
+                          "url_product": {
+                            "type": "string"
+                          },
+                          "owner_name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction/sell-list": {
+      "get": {
+        "description": "",
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil mendapatkan list produk yang harus segera dilakukan COD",
+                  "data": [
+                    {
+                      "transaction_id": "13e08e0c-c941-4ead-9576-0ca1d95673a5",
+                      "product_id": "4b7a28bd-bfd3-484c-ab2f-66dc6a53f5bb",
+                      "product_name": "kalkulator casio bekas normal",
+                      "product_price": "75000",
+                      "cancel_code": "123236",
+                      "url_product": "https://down-id.img.susercontent.com/file/id-11134207-7r98s-lqm0tso4v27s19",
+                      "buyer_name": "Nyasia Stroman"
+                    },
+                    {
+                      "transaction_id": "8e78748a-6122-45f7-a2a3-f72b874a6499",
+                      "product_id": "fe3bff0f-aef6-4450-9c23-5c8cb6fa688e",
+                      "product_name": "buku ajar bahasa Indonesia PMK PK ub",
+                      "product_price": "38000",
+                      "cancel_code": "189524",
+                      "url_product": "https://down-id.img.susercontent.com/file/7b7b5fd3b1ef2f471703aaf45fdb554b",
+                      "buyer_name": "Dannie Strosin"
+                    }
+                  ]
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "product_id": {
+                            "type": "string"
+                          },
+                          "product_name": {
+                            "type": "string"
+                          },
+                          "product_price": {
+                            "type": "string"
+                          },
+                          "cancel_code": {
+                            "type": "string"
+                          },
+                          "url_product": {
+                            "type": "string"
+                          },
+                          "owner_name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction/{id}": {
+      "delete": {
+        "description": "",
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "transaction_id": "8e78748a-6122-45f7-a2a3-f72b874a6499"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "transaction_id": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil membatalkan transaksi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Anda bukan pemilik transaksi ini"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction/{id}/cash-on-delivery": {
+      "patch": {
+        "description": "",
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "",
+          "content": {
+            "application/json": {
+              "example": {
+                "withdraw_code": "178625"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "withdraw_code": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil konfirmasi transaksi"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Not The Owner": {
+                    "value": {
+                      "message": "Anda bukan pemilik transaksi ini"
+                    }
+                  },
+                  "Wrong Code": {
+                    "value": {
+                      "message": "kode withdraw salah"
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "tags": [
+          "Transaction"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "cancel_code": "419688"
+              },
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cancel_code": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Berhasil menolak barang"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Not The Owner": {
+                    "value": {
+                      "message": "Anda bukan pemilik transaksi ini"
+                    }
+                  },
+                  "Wrong Code": {
+                    "value": {
+                      "message": "Kode cancel salah"
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+  }
+}
