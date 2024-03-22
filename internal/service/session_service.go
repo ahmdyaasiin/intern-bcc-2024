@@ -44,15 +44,15 @@ func (ss *SessionService) RenewSession(requests model.RequestForRenewAccessToken
 		Token: requests.RefreshToken,
 	})
 	if respDetails.Error != nil {
-		log.Println(respDetails.Error)
+		log.Println("Refresh token is invalid")
 
-		return res, respDetails
+		return res, response.Details{Code: 401, Message: "Refresh token is invalid", Error: errors.New("refresh token invalid")}
 	}
 
 	if session.ExpiredAt < time.Now().Local().UnixMilli() {
 		log.Println("Refresh token is expired")
 
-		return res, response.Details{Code: 403, Message: "Refresh token is expired", Error: errors.New("refresh token expired")}
+		return res, response.Details{Code: 401, Message: "Refresh token is expired", Error: errors.New("refresh token expired")}
 	}
 
 	accessToken, err := ss.jwtAuth.CreateAccessToken(session.UserID)

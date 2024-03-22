@@ -4,6 +4,7 @@ import (
 	"intern-bcc-2024/internal/repository"
 	"intern-bcc-2024/pkg/bcrypt"
 	"intern-bcc-2024/pkg/jwt"
+	"intern-bcc-2024/pkg/supabase"
 )
 
 type Service struct {
@@ -21,6 +22,7 @@ type InitParam struct {
 	Repository *repository.Repository
 	Bcrypt     bcrypt.Interface
 	JwtAuth    jwt.Interface
+	Supabase   supabase.Interface
 }
 
 func NewService(param InitParam) *Service {
@@ -28,7 +30,7 @@ func NewService(param InitParam) *Service {
 	otpService := NewOtpService(param.Repository.OtpRepository, param.Repository.UserRepository)
 	sessionService := NewSessionService(param.Repository.SessionRepository, param.JwtAuth)
 	tokenService := NewTokenService(param.Repository.TokenRepository, param.Repository.UserRepository)
-	productService := NewProductService(param.Repository.CategoryRepository, param.Repository.ProductRepository, param.Repository.MediaRepository, param.Repository.UserRepository, param.JwtAuth)
+	productService := NewProductService(param.Repository.CategoryRepository, param.Repository.ProductRepository, param.Repository.MediaRepository, param.Repository.UserRepository, param.JwtAuth, param.Supabase)
 	categoryService := NewCategoryService(param.Repository.CategoryRepository)
 	transactionService := NewTransactionService(param.Repository.ProductRepository, param.Repository.TransactionRepository, param.JwtAuth)
 	accountService := NewAccountService(param.Repository.AccountRepository)

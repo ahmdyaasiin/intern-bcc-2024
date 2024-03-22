@@ -35,29 +35,33 @@ func (r *Rest) MountEndpoint() {
 	auth.POST("/register", r.Register)
 	auth.PATCH("/register", r.VerifyAfterRegister)
 	auth.PATCH("/register/resend", r.ResendOtp)
+	auth.POST("/login", r.Login)
+	auth.GET("/my-data", r.middleware.Auth, r.MyData)
+	auth.DELETE("/logout", r.middleware.Auth, r.Logout)
+	auth.POST("/renew-access-token", r.RenewSession)
 	auth.POST("/reset", r.ResetPassword)
 	auth.GET("/reset/:token", r.CheckResetToken)
 	auth.PATCH("/reset/:token", r.ChangePasswordFromReset)
-	auth.POST("/login", r.Login)
-	auth.POST("/renew-access-token", r.RenewSession)
-	auth.DELETE("/logout", r.middleware.Auth, r.Logout)
-	auth.GET("/my-data", r.middleware.Auth, r.MyData)
 
 	// PROFILE ROUTE
 	profile := routerGroup.Group("/profile")
 	profile.GET("/account_number", r.middleware.Auth, r.AllAccountNumber)
 	profile.PATCH("/account_number", r.middleware.Auth, r.UpdateAccountNumber)
 
+	// CHAT ROUTE
+	chat := routerGroup.Group("/chat")
+	chat.GET("/who/:id", r.middleware.Auth, r.GetName)
+
 	// PRODUCT ROUTE
 	product := routerGroup.Group("/product")
 	product.GET("/homepage", r.HomePage)
 	product.GET("/search", r.middleware.Auth, r.SearchProducts)
 	product.GET("/detail/:id", r.middleware.Auth, r.DetailProduct)
-	product.POST("", r.middleware.Auth, r.AddProduct) // later
+	product.POST("", r.middleware.Auth, r.AddProduct)
 	product.GET("/:id", r.middleware.Auth, r.DetailProductOwner)
 	product.POST("/:id", r.middleware.Auth, r.BuyProduct)
-	product.PATCH("/:id", r.middleware.Auth, r.UpdateProduct)  // later
-	product.DELETE("/:id", r.middleware.Auth, r.DeleteProduct) // later
+	product.PATCH("/:id", r.middleware.Auth, r.UpdateProduct) // later
+	product.DELETE("/:id", r.middleware.Auth, r.DeleteProduct)
 	product.POST("/payment/callback", r.CheckPayment)
 
 	// TRANSACTION ROUTE
@@ -65,13 +69,13 @@ func (r *Rest) MountEndpoint() {
 	transaction.GET("/buy-list", r.middleware.Auth, r.FindActiveTransactions)
 	transaction.GET("/sell-list", r.middleware.Auth, r.FindActiveProducts)
 	transaction.DELETE("/:id", r.middleware.Auth, r.CancelTransaction)
-	transaction.PATCH("/:id/cash-on-delivery", r.middleware.Auth, r.RefuseTransaction)
-	transaction.DELETE("/:id/cash-on-delivery", r.middleware.Auth, r.AcceptTransaction)
+	transaction.PATCH("/:id/cash-on-delivery", r.middleware.Auth, r.AcceptTransaction)
+	transaction.DELETE("/:id/cash-on-delivery", r.middleware.Auth, r.RefuseTransaction)
 
 }
 
-func CheckStatus(c *gin.Context) {
-	c.JSON(200, "Server OK!")
+func CheckStatus(ctx *gin.Context) {
+	ctx.JSON(200, "Server OK!")
 }
 
 func (r *Rest) Run() {

@@ -25,11 +25,11 @@ func (r *Rest) BuyProduct(ctx *gin.Context) {
 		return
 	}
 
-	response.WithData(ctx, 200, "Success create transaction", transaction)
+	response.WithData(ctx, 200, "Berhasil membeli produk, silakan bayar", transaction)
 }
 
 func (r *Rest) CheckPayment(ctx *gin.Context) {
-	var requests model.PaymentNotificationHandler
+	var requests model.RequestForPaymentNotificationHandler
 	if err := ctx.ShouldBindJSON(&requests); err != nil {
 		var ve validator.ValidationErrors
 		errorList := validation.GetError(err, ve)
@@ -62,19 +62,6 @@ func (r *Rest) FindActiveTransactions(ctx *gin.Context) {
 }
 
 func (r *Rest) CancelTransaction(ctx *gin.Context) {
-	var requests model.RequestForCancelTransaction
-	if err := ctx.ShouldBindJSON(&requests); err != nil {
-		var ve validator.ValidationErrors
-		errorList := validation.GetError(err, ve)
-		if errorList != nil {
-			response.WithErrors(ctx, 422, "Failed to validate user requests", errorList)
-			return
-		}
-
-		response.MessageOnly(ctx, 422, "Failed to bind requests")
-		return
-	}
-
 	idParam := ctx.Param("id")
 	id, err := uuid.Parse(idParam)
 	if err != nil {
@@ -82,7 +69,7 @@ func (r *Rest) CancelTransaction(ctx *gin.Context) {
 		return
 	}
 
-	respDetails := r.service.TransactionService.CancelTransaction(ctx, id, requests.TransactionID)
+	respDetails := r.service.TransactionService.CancelTransaction(ctx, id)
 	if respDetails.Error != nil {
 		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
 		return

@@ -10,6 +10,7 @@ import (
 	"intern-bcc-2024/pkg/database/mysql"
 	"intern-bcc-2024/pkg/jwt"
 	"intern-bcc-2024/pkg/middleware"
+	"intern-bcc-2024/pkg/supabase"
 	"intern-bcc-2024/pkg/validation"
 )
 
@@ -21,9 +22,10 @@ func main() {
 	mysql.ConnectDatabase()
 	mysql.Migrate(mysql.Connection)
 	mysql.SeedData(mysql.Connection)
+	supabase.Init()
 
 	repo := repository.NewRepository(mysql.Connection)
-	srvc := service.NewService(service.InitParam{Repository: repo, Bcrypt: bcrypt.PKG, JwtAuth: jwt.PKG})
+	srvc := service.NewService(service.InitParam{Repository: repo, Bcrypt: bcrypt.PKG, JwtAuth: jwt.PKG, Supabase: supabase.PKG})
 
 	mw := middleware.Init(jwt.PKG, srvc)
 
@@ -31,7 +33,7 @@ func main() {
 	r.MountEndpoint()
 
 	go func() {
-		gocron.Every(1).Minutes().Do(r.DeleteExpiredTransaction)
+		gocron.Every(5).Minutes().Do(r.DeleteExpiredTransaction)
 		<-gocron.Start()
 	}()
 

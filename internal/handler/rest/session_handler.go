@@ -7,6 +7,7 @@ import (
 	"intern-bcc-2024/pkg/response"
 	"intern-bcc-2024/pkg/validation"
 	"log"
+	"strings"
 )
 
 func (r *Rest) RenewSession(ctx *gin.Context) {
@@ -29,6 +30,16 @@ func (r *Rest) RenewSession(ctx *gin.Context) {
 	}
 
 	token, respDetails := r.service.SessionService.RenewSession(requests)
+	if respDetails.Code == 401 {
+		if strings.Contains(respDetails.Message, "invalid") {
+			response.WithExpired(ctx, respDetails.Code, respDetails.Message, false)
+		} else {
+			response.WithExpired(ctx, respDetails.Code, respDetails.Message, true)
+		}
+
+		return
+	}
+
 	if respDetails.Error != nil {
 		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
 		return

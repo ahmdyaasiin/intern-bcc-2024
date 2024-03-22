@@ -3,6 +3,7 @@ package rest
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/google/uuid"
 	"intern-bcc-2024/entity"
 	"intern-bcc-2024/model"
 	"intern-bcc-2024/pkg/response"
@@ -41,7 +42,6 @@ func (r *Rest) Register(ctx *gin.Context) {
 
 func (r *Rest) VerifyAfterRegister(ctx *gin.Context) {
 	var requests model.RequestForVerify
-
 	if err := ctx.ShouldBindJSON(&requests); err != nil {
 		var ve validator.ValidationErrors
 		errorList := validation.GetError(err, ve)
@@ -168,4 +168,26 @@ func (r *Rest) UpdateAccountNumber(ctx *gin.Context) {
 	}
 
 	response.MessageOnly(ctx, 201, "Success update")
+}
+
+func (r *Rest) GetName(ctx *gin.Context) {
+	idParam := ctx.Param("id")
+	id, err := uuid.Parse(idParam)
+	if err != nil {
+		response.MessageOnly(ctx, 422, "Failed convert id")
+		return
+	}
+
+	user, respDetails := r.service.UserService.Find(model.ParamForFind{
+		ID: id,
+	})
+	if respDetails.Error != nil {
+
+		response.MessageOnly(ctx, respDetails.Code, respDetails.Message)
+		return
+	}
+
+	response.WithData(ctx, 200, "Success get product", model.ResponseForChatName{
+		Name: user.Name,
+	})
 }

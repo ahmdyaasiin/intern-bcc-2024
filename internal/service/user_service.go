@@ -168,15 +168,6 @@ func (us *UserService) VerifyAfterRegister(requests model.RequestForVerify) resp
 		return response.Details{Code: 401, Message: "Verification code is expired", Error: errors.New("verification code is expired")}
 	}
 
-	respDetails = us.ur.Find(tx, user, model.ParamForFind{
-		ID: requests.UserID,
-	})
-	if user.StatusAccount == "active" {
-		log.Println("user already verified")
-
-		return response.Details{Code: 403, Message: "User already verified", Error: errors.New("user already verified")}
-	}
-
 	user.StatusAccount = "active"
 	respDetails = us.ur.Update(tx, user)
 	if respDetails.Error != nil {
@@ -294,7 +285,7 @@ func (us *UserService) Login(requests model.RequestForLogin) (*model.ResponseFor
 	if err != nil {
 		log.Println("Wrong password")
 
-		return res, response.Details{Code: 500, Message: "Wrong password", Error: err}
+		return res, response.Details{Code: 401, Message: "Wrong password", Error: err}
 	}
 
 	accessToken, err := us.jwtAuth.CreateAccessToken(user.ID)
@@ -321,7 +312,11 @@ func (us *UserService) Login(requests model.RequestForLogin) (*model.ResponseFor
 	}
 
 	expiredAt, err := strconv.Atoi(os.Getenv("REFRESH_TOKEN_TIME"))
-	// handle error
+	if err != nil {
+		log.Println(err)
+
+		return res, response.Details{Code: 500, Message: "Failed convert refresh token time", Error: err}
+	}
 
 	session = &entity.Session{
 		ID:        uuid.New(),
@@ -366,19 +361,6 @@ func (us *UserService) UpdateAccountNumber(ctx *gin.Context, requests model.Requ
 
 	tx := us.db.Begin()
 	defer tx.Rollback()
-
-	defaultUUID, err := uuid.Parse("00000000-0000-0000-0000-000000000000")
-	if err != nil {
-		log.Println(err)
-
-		return response.Details{Code: 500, Message: "Failed to convert default uuid", Error: err}
-	}
-
-	if requests.ID == defaultUUID {
-		log.Println("user sent default UUID as request body")
-
-		return response.Details{Code: 403, Message: "Can't setting to default UUID"}
-	}
 
 	respDetails := us.ar.Find(tx, account, model.ParamForFind{
 		ID: requests.ID,
