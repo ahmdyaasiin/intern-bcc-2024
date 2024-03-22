@@ -60,3 +60,7 @@ type ResponseForLogin struct {
 type ResponseForRenew struct {
 	AccessToken string `json:"access_token"`
 }
+
+type ResponseForChatName struct {
+	Name string `json:"name"`
+}

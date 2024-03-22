@@ -34,4 +34,5 @@ type ResponseForActiveTransactions struct {
 	WithdrawalCode string    `json:"withdrawal_code"`
 	UrlProduct     string    `json:"url_product"`
 	OwnerName      string    `json:"owner_name"`
+	OwnerID        string    `json:"owner_id"`
 }

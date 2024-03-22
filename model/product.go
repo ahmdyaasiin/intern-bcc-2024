@@ -22,11 +22,20 @@ type RequestForSearch struct {
 }
 
 type RequestForAddProduct struct {
-	Category    string                `form:"category" binding:"required"`
-	Name        string                `form:"name" binding:"required"`
-	Description string                `form:"description" binding:"required"`
-	Price       string                `form:"price" binding:"required"`
-	Photo       *multipart.FileHeader `form:"photo" binding:"required"`
+	Name        string                  `form:"name" binding:"required"`
+	Description string                  `form:"description" binding:"required"`
+	Price       string                  `form:"price" binding:"required"`
+	Category    string                  `form:"category" binding:"required"`
+	Photo       []*multipart.FileHeader `form:"photo" binding:"required,max=3"`
+}
+
+type RequestForEditProduct struct {
+	Name        string                  `form:"name" binding:"required"`
+	Description string                  `form:"description" binding:"required"`
+	Price       string                  `form:"price" binding:"required"`
+	Category    string                  `form:"category" binding:"required"`
+	OldPhoto    []string                `form:"old_photo" binding:"max=3"`
+	Photo       []*multipart.FileHeader `form:"photo" binding:"max=3"`
 }
 
 /*
