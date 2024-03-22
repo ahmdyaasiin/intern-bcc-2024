@@ -202,8 +202,8 @@ func (us *UserService) VerifyAfterRegister(requests model.RequestForVerify) resp
 }
 
 func (us *UserService) ChangePasswordFromReset(tokenRequest string, request model.RequestForChangePassword) response.Details {
-	var token *entity.ResetToken
-	var user *entity.User
+	token := new(entity.ResetToken)
+	user := new(entity.User)
 
 	tx := us.db.Begin()
 	defer tx.Rollback()
