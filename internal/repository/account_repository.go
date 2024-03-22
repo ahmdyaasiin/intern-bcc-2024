@@ -22,16 +22,16 @@ func NewAccountRepository(db *gorm.DB) IAccountRepository {
 
 func (ar *AccountRepository) Find(tx *gorm.DB, account *entity.AccountNumberType, param model.ParamForFind) response.Details {
 	if err := tx.Debug().Where(&param).First(account).Error; err != nil {
-		return response.Details{Code: 500, Message: "Failed to find account number type", Error: err}
+		return response.Details{Code: 500, Message: "Nomor rekening gagal ditemukan", Error: err}
 	}
 
-	return response.Details{Code: 200, Message: "Success to find account number type", Error: nil}
+	return response.Details{Code: 200, Message: "Nomor rekening berhasil ditemukan", Error: nil}
 }
 
 func (ar *AccountRepository) GetAllAccountTypes(tx *gorm.DB, accounts *[]entity.AccountNumberType) response.Details {
-	if err := tx.Debug().Where("id != '00000000-0000-0000-0000-000000000000'").Find(accounts).Error; err != nil {
-		return response.Details{Code: 500, Message: "Failed to find account types", Error: err}
+	if err := tx.Debug().Where("name != 'Default'").Find(accounts).Error; err != nil {
+		return response.Details{Code: 500, Message: "Tipe nomor rekening gagal ditemukan", Error: err}
 	}
 
-	return response.Details{Code: 200, Message: "Success to find account types", Error: nil}
+	return response.Details{Code: 200, Message: "Tipe nomor rekening berhasil ditemukan", Error: nil}
 }

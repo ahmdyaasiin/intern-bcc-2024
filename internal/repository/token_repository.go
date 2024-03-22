@@ -10,7 +10,6 @@ import (
 type ITokenRepository interface {
 	Find(tx *gorm.DB, token *entity.ResetToken, param model.ParamForFind) response.Details
 	Create(tx *gorm.DB, token *entity.ResetToken) response.Details
-	Update(token *entity.ResetToken) response.Details
 	Delete(tx *gorm.DB, token *entity.ResetToken) response.Details
 }
 
@@ -24,32 +23,24 @@ func NewTokenRepository(db *gorm.DB) ITokenRepository {
 
 func (tr *TokenRepository) Find(tx *gorm.DB, token *entity.ResetToken, param model.ParamForFind) response.Details {
 	if err := tx.Debug().Where(&param).First(&token).Error; err != nil {
-		return response.Details{Code: 500, Message: "Failed to find token", Error: err}
+		return response.Details{Code: 500, Message: "Token gagal ditemukan", Error: err}
 	}
 
-	return response.Details{Code: 200, Message: "Success to find token", Error: nil}
+	return response.Details{Code: 200, Message: "Token berhasil ditemukan", Error: nil}
 }
 
 func (tr *TokenRepository) Create(tx *gorm.DB, token *entity.ResetToken) response.Details {
-	if err := tr.db.Debug().Create(token).Error; err != nil {
-		return response.Details{Code: 500, Message: "Failed to create token", Error: err}
+	if err := tx.Debug().Create(token).Error; err != nil {
+		return response.Details{Code: 500, Message: "Token gagal dibuat", Error: err}
 	}
 
-	return response.Details{Code: 200, Message: "Success to create token", Error: nil}
-}
-
-func (tr *TokenRepository) Update(token *entity.ResetToken) response.Details {
-	if err := tr.db.Debug().Updates(token).Error; err != nil {
-		return response.Details{Code: 500, Message: "Failed to update token", Error: err}
-	}
-
-	return response.Details{Code: 200, Message: "Success to update token", Error: nil}
+	return response.Details{Code: 200, Message: "Token berhasil dibuat", Error: nil}
 }
 
 func (tr *TokenRepository) Delete(tx *gorm.DB, token *entity.ResetToken) response.Details {
 	if err := tx.Debug().Delete(token).Error; err != nil {
-		return response.Details{Code: 500, Message: "Failed to delete token", Error: err}
+		return response.Details{Code: 500, Message: "Token gagal dihapus", Error: err}
 	}
 
-	return response.Details{Code: 200, Message: "Success to delete token", Error: nil}
+	return response.Details{Code: 200, Message: "Token berhasil dihapus", Error: nil}
 }
