@@ -2,8 +2,11 @@
   "openapi": "3.0.3",
   "info": {
     "title": "Bekas.an - Open API",
-    "description": "Description of the API",
-    "version": "2.1.2"
+    "description": "API for a second-hand marketplace platform aimed at University of Brawijaya students.\n\n- Repository: [https://github.com/ahmdyaasiin/intern-bcc-2024](https://github.com/ahmdyaasiin/intern-bcc-2024)",
+    "contact":{
+      "email": "ahmdyaasiin@gmail.com"
+    },
+    "version": "2.1.7"
   },
   "servers": [
     {
@@ -1215,6 +1218,108 @@
                           "type": "string"
                         }
                       }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Terjadi kesalahan yang tidak terduga"
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "/chat/who/:id": {
+      "get": {
+        "description": "",
+        "tags": [
+          "Chat"
+        ],
+        "parameters": [
+          {
+            "name": "Bearer Authorization",
+            "in": "header",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Success get product",
+                  "data": {
+                    "name": "Adele Kassulke"
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Invalid": {
+                    "value": {
+                      "message": "Access token salah",
+                      "is_expired": false
+                    }
+                  },
+                  "Expired": {
+                    "value": {
+                      "message": "Access token kadaluwarsa",
+                      "is_expired": true
+                    }
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "is_expired": {
+                      "type": "boolean"
                     }
                   }
                 }
